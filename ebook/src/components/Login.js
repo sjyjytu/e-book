@@ -6,6 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
+import {User} from "../agent";
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
@@ -78,5 +79,21 @@ class Login extends React.Component {
         );
     }
 }
+
+/*function mapStateToProps(state) {
+    return {
+        redirectTo: state.Redirect.redirectTo,
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        checkAccount: (email, password) => {
+            User.login(email, password).then(res=>dispatch({type: "LOGIN",result:res})).catch(err=>alert("username or password error"));
+        },
+        onRedirect: () => dispatch({type: 'REDIRECTED'})
+
+    }
+}*/
 
 export default withStyles(styles)(Login);
