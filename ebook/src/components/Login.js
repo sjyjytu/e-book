@@ -8,12 +8,18 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import {User} from "../agent";
 import { withStyles } from '@material-ui/core/styles';
+import {connect} from "react-redux";
+import bgImg from '../img/login.jpg';
 
 const styles = theme => ({
     submit:{
         marginTop: theme.spacing.unit * 2,
-    }
-
+    },
+    /*img:{
+        width: '100%',
+        height:'400px',
+        backgroundImg: `url(${bgImg})`
+    }*/
 });
 
 class Login extends React.Component {
@@ -27,13 +33,20 @@ class Login extends React.Component {
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.redirectTo) {
+            this.props.history.push(nextProps.redirectTo);
+            this.props.onRedirect();
+        }
+    }
+
     render() {
-        const {dialogState,handleClose,classes} = this.props;
+        const {classes} = this.props;
         return (
-            <React.Fragment>
+            <div>
+                <img src={bgImg}/>
                 <Dialog
-                    open={dialogState.open}
-                    onClose={handleClose}
+                    open={true}
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogTitle id="form-dialog-title">Sign in</DialogTitle>
@@ -75,12 +88,13 @@ class Login extends React.Component {
                         </form>
                     </DialogContent>
                 </Dialog>
-            </React.Fragment>
+            </div>
+
         );
     }
 }
 
-/*function mapStateToProps(state) {
+function mapStateToProps(state) {
     return {
         redirectTo: state.Redirect.redirectTo,
     }
@@ -88,12 +102,12 @@ class Login extends React.Component {
 
 function mapDispatchToProps(dispatch) {
     return {
-        checkAccount: (email, password) => {
-            User.login(email, password).then(res=>dispatch({type: "LOGIN",result:res})).catch(err=>alert("username or password error"));
+        checkAccount: (username, password) => {
+            User.login(username, password).then(res=>dispatch({type: "LOGIN",result:res})).catch(err=>alert("username or password error"));
         },
         onRedirect: () => dispatch({type: 'REDIRECTED'})
 
     }
-}*/
+}
 
-export default withStyles(styles)(Login);
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(Login));

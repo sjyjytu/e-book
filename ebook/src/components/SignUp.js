@@ -10,9 +10,8 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import {MuiThemeProvider} from '@material-ui/core';
 import theme from '../theme';
-/*import {User} from "../../agent";
-import {signup} from "../../actions";
-import {connect} from "react-redux";*/
+import {User} from "../agent";
+import {connect} from "react-redux";
 
 const styles = theme => ({
     main: {
@@ -39,7 +38,7 @@ const styles = theme => ({
 class SignUp extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {username:'',password:''};
+        this.state = {username:'',password:'',confirmPass:'',email:''};
         this.handleInputChange = field=> e => {
             const state = this.state;
             const newState = Object.assign({}, state, {[field]: e.target.value});
@@ -66,7 +65,11 @@ class SignUp extends React.Component{
                         </Typography>
                         <form onSubmit={event => {
                             event.preventDefault();
-                            this.props.checkAccount(this.state.username, this.state.password);
+                            if (this.state.password === this.state.confirmPass) {
+                                this.props.checkAccount(this.state.username, this.state.password, this.state.email);
+                            } else {
+                                alert('前后密码不一致');
+                            }
                         }}>
                             <FormControl margin="normal" required fullWidth>
                                 <InputLabel htmlFor="username">UserName</InputLabel>
@@ -89,6 +92,28 @@ class SignUp extends React.Component{
                                     type="password"
                                 />
                             </FormControl>
+                            <FormControl margin="normal" required fullWidth>
+                                <InputLabel htmlFor="confirmPass">confirm your password</InputLabel>
+                                <Input
+                                    id="confirmPass"
+                                    name="confirmPass"
+                                    value={this.state.confirmPass}
+                                    //autoComplete="current-password"
+                                    onChange={this.handleInputChange('confirmPass')}
+                                    type="password"
+                                />
+                            </FormControl>
+                            <FormControl margin="normal" required fullWidth>
+                                <InputLabel htmlFor="email">email</InputLabel>
+                                <Input
+                                    id="email"
+                                    name="email"
+                                    value={this.state.email}
+                                    autoComplete="current-password"
+                                    onChange={this.handleInputChange('email')}
+                                    type="email"
+                                />
+                            </FormControl>
                             <Button
                                 type="submit"
                                 fullWidth
@@ -106,7 +131,7 @@ class SignUp extends React.Component{
     }
 }
 
-/*function mapStateToProps(state) {
+function mapStateToProps(state) {
     return {
         redirectTo: state.Redirect.redirectTo,
     }
@@ -114,12 +139,11 @@ class SignUp extends React.Component{
 
 function mapDispatchToProps(dispatch) {
     return {
-        checkAccount: (email, password) => {
-            //dispatch(login(User.login(email, password)));
-            User.signup(email, password).then(res=>dispatch(signup(res))).catch(()=>alert("username has been used"));
+        checkAccount: (username, password, email) => {
+            User.signup(username, password, email).then(res=>dispatch({type: "SIGN_UP"})).catch(()=>alert("username has been used"));
         },
         onRedirect: () => dispatch({type: 'REDIRECTED'})
     }
-}*/
+}
 
-export default /*connect(mapStateToProps,mapDispatchToProps)*/(withStyles(styles)(SignUp));
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(SignUp));

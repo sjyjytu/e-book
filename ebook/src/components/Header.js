@@ -51,36 +51,39 @@ class Header extends React.Component{
         };
 
         this.handleCloseLogin = () => {
-            this.setState({ open: false });
+            this.setState({ anchorEl: null, open: false });
         };
     }
 
     render() {
-        const { classes,userId } = this.props;
+        const { classes,Login } = this.props;
         const { anchorEl } = this.state;
         return (
             <div className={classes.root}>
+
                 <AppBar position="static">
                     <Toolbar>
                         <Typography variant="h6" color="inherit" className={classes.grow}>
-                            欢迎，JY同学
+                            欢迎，{Login.username !== '' ? Login.username : '请登录'}
                         </Typography>
                         <Button color="inherit" className={classes.button} href="#">
                             <Home className={classes.buttonIcon}/>
                             主页
                         </Button>
-                        {userId!==""?
-                            <Button color="inherit" className={classes.button} href="#/cart/123456">
-                                <ShoppingCart className={classes.buttonIcon}/>
-                                购物车
-                            </Button>
-                            :
-                            <Button color="inherit" className={classes.button} href="#/login">
-                                <AccountCircle className={classes.buttonIcon}/>
-                                管理用户
-                            </Button>
+                        {Login._id !== "" ?
+                            (
+                                Login.isManager ?
+                                    <Button color="inherit" className={classes.button} href="#/login">
+                                        <AccountCircle className={classes.buttonIcon}/>
+                                        管理用户
+                                    </Button>
+                                    :
+                                    <Button color="inherit" className={classes.button} href="#/cart/123456">
+                                        <ShoppingCart className={classes.buttonIcon}/>
+                                        购物车
+                                    </Button>
+                            ) : null
                         }
-
                         <Button
                             aria-owns={anchorEl ? 'simple-menu' : undefined}
                             aria-haspopup="true"
@@ -96,11 +99,10 @@ class Header extends React.Component{
                             open={Boolean(anchorEl)}
                             onClose={this.handleClose}
                         >
-                            <MenuItem /*onClick=*/>
-                                <Button color="inherit" fullWidth onClick={this.handleClickLogin}>
+                            <MenuItem onClick={this.handleClose}>
+                                <Button color="inherit" fullWidth href="#/login">
                                     登录
                                 </Button>
-                                <Login dialogState={{open:this.state.open}} handleClose={this.handleCloseLogin}/>
                             </MenuItem>
                             <MenuItem onClick={this.handleClose}>
                                 <Button color="inherit" fullWidth href="#/signup">
@@ -119,8 +121,8 @@ class Header extends React.Component{
 
 
 function mapStateToProps(state) {
-    return {userId: false/*state.Login.userId*/};
+    return {Login: state.Login};
 }
 
-//export default connect(mapStateToProps)(withStyles(styles)(Header));
-export default withStyles(styles)(Header);
+export default connect(mapStateToProps)(withStyles(styles)(Header));
+//export default withStyles(styles)(Header);

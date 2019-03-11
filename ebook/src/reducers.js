@@ -13,7 +13,7 @@ function Redirect(state={redirectTo:null},action) {
     switch (action.type) {
         case 'REDIRECTED':
             return {redirectTo: null};
-        case 'SIGNUP':
+        case 'SIGN_UP':
             return {redirectTo: '/'};
         case 'LOGIN':
         default:

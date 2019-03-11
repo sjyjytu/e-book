@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
-
+import {connect} from "react-redux";
 
 const styles = theme => (
     {
