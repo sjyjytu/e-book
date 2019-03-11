@@ -6,6 +6,7 @@ import ChoosePage from '../Main/ChoosePage';
 import Grid from '@material-ui/core/Grid';
 import BookCard from './BookCard';
 import Catalog from '../Main/Catalog';
+import {connect} from "react-redux";
 
 const styles = theme => ({
     superRoot:{
@@ -33,11 +34,7 @@ class BooksPage extends React.Component{
         super(props);
     }
     render() {
-        const {classes} = this.props;
-        const array =  new Array(100);
-        for (var i = 0; i < 100; i++) {
-            array[i] = i;
-        }
+        const {classes,books} = this.props;
         return (
             <div className={classes.superRoot}>
                 <Header/>
@@ -50,10 +47,9 @@ class BooksPage extends React.Component{
                     <Grid item xs={9} wrap="wrap">
                         <div className={classes.root}>
                             {
-                                array.map(()=>(
+                                books.map((book)=>(
                                     <div className={classes.bookCard}>
-                                        <BookCard
-                                            imgSrc="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1551802325651&di=d9148ae42e0be9d8d7355c94382a1724&imgtype=0&src=http%3A%2F%2Fpic43.photophoto.cn%2F20170608%2F0009021150907030_b.jpg"/>
+                                        <BookCard book={book}/>
                                     </div>
                                 ))
                             }
@@ -65,4 +61,10 @@ class BooksPage extends React.Component{
     }
 }
 
-export default withStyles(styles)(BooksPage);
+function mapStateToProps(state) {
+    return {
+        books: state.BookDetail.books,
+    }
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(BooksPage));

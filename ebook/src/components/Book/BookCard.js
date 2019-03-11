@@ -26,27 +26,27 @@ class BookCard extends React.Component{
     }
 
     render() {
-        const { classes,imgSrc } = this.props;
+        const { classes,book } = this.props;
         return (
             <Card className={classes.card}>
                 <CardActionArea>
                     <CardMedia
                         className={classes.media}
-                        image={imgSrc}
+                        image={book.pictureUrl}
                         title="Contemplative Reptile"
                     />
                     <CardContent>
                         <Typography gutterBottom variant="h6" component="h4">
-                            流他妈浪地球
+                            {book.bookname}
                         </Typography>
                         <Typography component="p" className={classes.author}>
-                            作者：客天涯
+                            {book.author}
                         </Typography>
                     </CardContent>
                 </CardActionArea>
                 <CardActions>
                     <Button size="small" color="primary">
-                        价格
+                        {book.price}
                     </Button>
                     <Button size="small" color="primary" href="#/book/123">
                         详情
