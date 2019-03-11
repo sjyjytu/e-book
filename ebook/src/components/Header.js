@@ -9,6 +9,7 @@ import Home from '@material-ui/icons/Home';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ShoppingCart from '@material-ui/icons/ShoppingCart';
+import Login from './Login';
 import {connect} from "react-redux";
 
 
@@ -38,12 +39,19 @@ const styles = theme => ({
 class Header extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {anchorEl: null}
+        this.state = {anchorEl: null, open: false};
         this.handleClose = () => {
             this.setState({anchorEl: null});
         };
         this.handleClick = event => {
             this.setState({anchorEl: event.currentTarget});
+        };
+        this.handleClickLogin = () => {
+            this.setState({ open: true });
+        };
+
+        this.handleCloseLogin = () => {
+            this.setState({ open: false });
         };
     }
 
@@ -62,7 +70,7 @@ class Header extends React.Component{
                             主页
                         </Button>
                         {userId!==""?
-                            <Button color="inherit" className={classes.button} href="#/shopping-cart">
+                            <Button color="inherit" className={classes.button} href="#/cart/123456">
                                 <ShoppingCart className={classes.buttonIcon}/>
                                 购物车
                             </Button>
@@ -88,10 +96,11 @@ class Header extends React.Component{
                             open={Boolean(anchorEl)}
                             onClose={this.handleClose}
                         >
-                            <MenuItem onClick={this.handleClose}>
-                                <Button color="inherit" fullWidth href="#/login">
+                            <MenuItem /*onClick=*/>
+                                <Button color="inherit" fullWidth onClick={this.handleClickLogin}>
                                     登录
                                 </Button>
+                                <Login dialogState={{open:this.state.open}} handleClose={this.handleCloseLogin}/>
                             </MenuItem>
                             <MenuItem onClick={this.handleClose}>
                                 <Button color="inherit" fullWidth href="#/signup">

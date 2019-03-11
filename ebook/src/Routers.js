@@ -2,6 +2,9 @@ import React from 'react';
 import {HashRouter, Route, Switch} from 'react-router-dom';
 import HomePage from './components/Main/HomePage';
 import BooksPage from './components/Book/BooksPage';
+import BookDetail from "./components/Book/BookDetail";
+import ShoppingCart from "./components/Shopping/ShoppingCart";
+import SignUp from './components/SignUp';
 
 const BasicRoute = () => {
     return (
@@ -9,6 +12,9 @@ const BasicRoute = () => {
             <Switch>
                 <Route exact path="/" component={HomePage}/>
                 <Route exact path="/all-books" component={BooksPage}/>
+                <Route exact path="/book/:id" component={BookDetail}/>
+                <Route exact path="/cart/:id" component={ShoppingCart}/>
+                <Route exact path="/signup" component={SignUp}/>
             </Switch>
         </HashRouter>
     );

@@ -48,7 +48,7 @@ class BookCard extends React.Component{
                     <Button size="small" color="primary">
                         价格
                     </Button>
-                    <Button size="small" color="primary">
+                    <Button size="small" color="primary" href="#/book/123">
                         详情
                     </Button>
                 </CardActions>

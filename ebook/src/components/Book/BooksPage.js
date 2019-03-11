@@ -8,6 +8,9 @@ import BookCard from './BookCard';
 import Catalog from '../Main/Catalog';
 
 const styles = theme => ({
+    superRoot:{
+      minWidth:'900px'
+    },
     root: {
         position: 'relative',
         paddingTop: theme.spacing.unit,
@@ -36,7 +39,7 @@ class BooksPage extends React.Component{
             array[i] = i;
         }
         return (
-            <React.Fragment>
+            <div className={classes.superRoot}>
                 <Header/>
                 <SearchBar/>
                 <ChoosePage/>
@@ -57,7 +60,7 @@ class BooksPage extends React.Component{
                         </div>
                     </Grid>
                 </Grid>
-            </React.Fragment>
+            </div>
         );
     }
 }
