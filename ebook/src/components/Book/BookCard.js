@@ -7,13 +7,14 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import {Link} from 'react-router-dom';
 
 const styles = {
     card: {
         maxWidth: 170,
     },
     media: {
-        height: 200,
+        height: 250,
     },
     author:{
         color:'gray'
@@ -48,9 +49,9 @@ class BookCard extends React.Component{
                     <Button size="small" color="primary">
                         {book.price}
                     </Button>
-                    <Button size="small" color="primary" href="#/book/123">
+                    <Link to={'book/' + book.bookname}>
                         详情
-                    </Button>
+                    </Link>
                 </CardActions>
             </Card>
         );

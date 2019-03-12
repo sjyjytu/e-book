@@ -10,6 +10,7 @@ import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import RestoreIcon from '@material-ui/icons/Restore';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
+import {connect} from "react-redux";
 
 const styles = theme => ({
     superRoot: {
@@ -99,7 +100,7 @@ const styles = theme => ({
     },
 });
 
-class BooksPage extends React.Component{
+class BookDetail extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
@@ -112,31 +113,31 @@ class BooksPage extends React.Component{
         this.setState({ value });
     };
     render() {
-        const {classes} = this.props;
+        const {classes, books} = this.props;
+        const [book] = books.filter(book=>book.bookname===this.props.match.params.bookname);
         return (
             <div className={classes.superRoot}>
                 <Header/>
                 <SearchBar/>
                 <div className={classes.root}>
                     <div className={classes.left}>
-                        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1551802325651&
-                        di=d9148ae42e0be9d8d7355c94382a1724&imgtype=0&src=http%3A%2F%2Fpic43.photophoto.cn%2F20170608%2F0009021150907030_b.jpg"
+                        <img src={book.pictureUrl}
                         width="100%" height="100%"/>
                     </div>
                     <div className={classes.middle}>
-                        <Typography variant="h4">流他妈浪地球</Typography>
+                        <Typography variant="h4">{book.bookname}</Typography>
                         <Divider/>
                         <Typography variant="body1" color="inherit">
-                            作者：客天涯
+                            作者：{book.author}
                             {"       "}
                             评论数：5201314
                         </Typography>
                         <div className={classes.price}>
-                                ￥ 13880.00
+                                ￥ {book.price}
                         </div>
                         <div className={classes.summary}>
                             <span className={classes.summarySpan}>
-                                摘要：《流浪地球》根据刘慈欣同名小说改编，影片故事设定在2075年，讲述了太阳即将毁灭，已经不适合人类生存，而面对绝境，人类将开启“流浪地球”计划，试图带着地球一起逃离太阳系，寻找人类新家园的故事。
+                                {book.summary}
                             </span>
                         </div>
                         <input type="number" min="1" max="20" className={classes.inputNum} placeholder="0"/>
@@ -170,4 +171,10 @@ class BooksPage extends React.Component{
     }
 }
 
-export default withStyles(styles)(BooksPage);
+function mapStateToProps(state) {
+    return {
+        books: state.BookDetail.books,
+    }
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(BookDetail));

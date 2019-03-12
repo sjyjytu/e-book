@@ -36,7 +36,7 @@ class ChoosePage extends React.Component{
                         <Button className={classes.button} variant="" fullWidth={true}>按类划分</Button>
                     </Grid>
                     <Grid item xs={4}>
-                        <Button className={classes.button} variant="" fullWidth={true}>新增/删除</Button>
+                        <Button className={classes.button} variant="" fullWidth={true} href="#/add-new-book">新增/删除</Button>
                     </Grid>
                 </Grid>
                 <Divider/>

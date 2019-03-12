@@ -24,11 +24,11 @@ export const Book = {
 
 //the action of manager add a book, delete a book, update a book, ban a user
 export const Manage = {
-    addABook: (bookname, stockNum, summary, pictureUrl, author, price) => request.post("/api/manage/add",
-        {
+    addABook: (/*bookname, stockNum, summary, pictureUrl, author, price*/book) => request.post("/api/manage/add",
+        /*{
             "bookname": bookname, "stockNum": stockNum, "summary": summary, "pictureUrl": pictureUrl, "author": author,
             "price": price
-        }),
+        }*/book).then(resBody),
     deleteABook: (bookname) => superagent.delete(RootUrl + "/api/manage/delete").set('Content-Type', 'application/json')
         .send({"bookname": bookname}).then(resBody),
     updateABook: (bookname, stockNum, summary, pictureUrl, author, price) => superagent.put(RootUrl + "/api/manage/update")
