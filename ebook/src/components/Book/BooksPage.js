@@ -79,4 +79,4 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(BooksPage));
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(BooksPage));

@@ -12,12 +12,13 @@ import theme from '../../theme';
 import {connect} from "react-redux";
 import request from 'superagent';
 import {Manage} from "../../agent";
-import IconButton from "@material-ui/core/IconButton";
+import InputAdornment from '@material-ui/core/InputAdornment';
+import NumberFormat from 'react-number-format';
 
 
 const styles = theme => ({
     supermain:{
-        minWidth: '450px',
+        minWidth: '650px',
     },
     main: {
         width: 'auto',
@@ -46,8 +47,6 @@ const styles = theme => ({
         outline: 'none',
         borderWidth: '0px',
         borderRadius: '3px',
-
-
     },
     input:{
         display:'none'
@@ -67,13 +66,28 @@ const styles = theme => ({
         height: '170px',
     },
     cover:{
+        display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         float: 'right',
         height: '170px',
-        display: 'flex',
         width: '120px',
         border: '1px dashed blue',
+    },
+    price:{
+
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+    },
+    pan:{
+        float: 'left',
+        height: '170px',
+        marginLeft: theme.spacing.unit * 4,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
 
@@ -81,11 +95,50 @@ const styles = theme => ({
 const CLOUDINARY_UPLOAD_PRESET = 'cvtoheob';
 const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/dbqbt0cli/upload';
 
+//格式化stockNum输入
+function NumberFormatCustom(props) {
+    const { inputRef, onChange, ...other } = props;
+    return (
+        <NumberFormat
+            {...other}
+            getInputRef={inputRef}
+            onValueChange={values => {
+                onChange({
+                    target: {
+                        value: values.value,
+                    },
+                });
+            }}
+            thousandSeparator
+            prefix="* "
+        />
+    );
+}
+
+function NumberFormatCustom2(props) {
+    const { inputRef, onChange, ...other } = props;
+    return (
+        <NumberFormat
+            {...other}
+            getInputRef={inputRef}
+            onValueChange={values => {
+                onChange({
+                    target: {
+                        value: values.value,
+                    },
+                });
+            }}
+            thousandSeparator
+            prefix="￥"
+        />
+    );
+}
+
 
 class AddNewBook extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {bookname: '', summary: '', uploadImg: null, uploadImgUrl: '', price: 0, author: '', stockNum: 0};
+        this.state = {bookname: '', summary: '', uploadImg: null, uploadImgUrl: '', price: '0', author: '', stockNum: '0'};
         this.handleInputChange = field=> e => {
             const state = this.state;
             const newState = Object.assign({}, state, {[field]: e.target.value});
@@ -141,11 +194,11 @@ class AddNewBook extends React.Component{
                                     this.props.addNewBook(
                                         {
                                             "bookname": this.state.bookname,
-                                            "stockNum": this.state.stockNum,
+                                            "stockNum": parseInt(this.state.stockNum),
                                             "summary": this.state.summary,
                                             "pictureUrl": this.state.uploadImgUrl,
                                             "author": this.state.author,
-                                            "price": this.state.price
+                                            "price": parseFloat(this.state.price)
                                         }
                                     )
                                 }
@@ -171,6 +224,28 @@ class AddNewBook extends React.Component{
                                             autoFocus
                                         />
                                     </FormControl>
+                                </div>
+                                <div className={this.props.classes.pan}>
+                                    <TextField
+                                        className={this.props.classes.price}
+                                        label="Price"
+                                        value={this.state.price}
+                                        onChange={this.handleInputChange('price')}
+                                        id="formatted-numberformat-price"
+                                        InputProps={{
+                                            inputComponent: NumberFormatCustom2,
+                                        }}
+                                    />
+                                    <TextField
+                                        //className={this.props.classes.formControl}
+                                        label="Stock Number"
+                                        value={this.state.stockNum}
+                                        onChange={this.handleInputChange('stockNum')}
+                                        id="formatted-numberformat-stockNum"
+                                        InputProps={{
+                                            inputComponent: NumberFormatCustom,
+                                        }}
+                                    />
                                 </div>
                                 <div className={this.props.classes.cover}>
                                     <input accept=".jpg,.jpeg,.png " className={this.props.classes.input}

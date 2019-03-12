@@ -14,8 +14,9 @@ function Redirect(state={redirectTo:null},action) {
         case 'REDIRECTED':
             return {redirectTo: null};
         case 'SIGN_UP':
-            return {redirectTo: '/'};
+        case 'ADD_BOOK':
         case 'LOGIN':
+            return {redirectTo: '/'};
         default:
             return state;
 

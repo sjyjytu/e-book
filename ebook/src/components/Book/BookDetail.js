@@ -11,6 +11,7 @@ import RestoreIcon from '@material-ui/icons/Restore';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import {connect} from "react-redux";
+import {Book} from '../../agent';
 
 const styles = theme => ({
     superRoot: {
@@ -105,6 +106,7 @@ class BookDetail extends React.Component{
         super(props);
         this.state = {
             value: 0,
+            num: '0',
         };
     }
 
@@ -113,7 +115,7 @@ class BookDetail extends React.Component{
         this.setState({ value });
     };
     render() {
-        const {classes, books} = this.props;
+        const {classes, books, _id} = this.props;
         const [book] = books.filter(book=>book.bookname===this.props.match.params.bookname);
         return (
             <div className={classes.superRoot}>
@@ -140,8 +142,9 @@ class BookDetail extends React.Component{
                                 {book.summary}
                             </span>
                         </div>
-                        <input type="number" min="1" max="20" className={classes.inputNum} placeholder="0"/>
-                        <Button className={classes.addBtn}>
+                        <input type="number" min="1" max="20" className={classes.inputNum} value={this.state.num}
+                        onChange={event => {this.setState({num:event.target.value})}}/>
+                        <Button className={classes.addBtn} onClick={()=>this.props.addToCart(_id,book.bookname,/*parseInt(this.state.num)*/1)}>
                             加入购物车
                         </Button>
                         <Button className={classes.buyBtn}>
@@ -174,7 +177,17 @@ class BookDetail extends React.Component{
 function mapStateToProps(state) {
     return {
         books: state.BookDetail.books,
+        _id: state.Login._id,
+    }
+}
+function mapDispatchToProps(dispatch) {
+    return {
+        addToCart: (_id, bookname, num) => Book.addToCart(_id, bookname, num).then(dispatch({
+            type: "ADD_TO_CART",
+            bookname: bookname,
+            num: num
+        })).catch(err => alert(err.message))
     }
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(BookDetail));
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(BookDetail));
