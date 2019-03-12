@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import BookCard from './BookCard';
 import Catalog from '../Main/Catalog';
 import {connect} from "react-redux";
+import {Book} from "../../agent";
 
 const styles = theme => ({
     superRoot:{
@@ -33,6 +34,11 @@ class BooksPage extends React.Component{
     constructor(props) {
         super(props);
     }
+
+    componentDidMount() {
+        Book.showBooks().then(res=>this.props.storeAllBooks(res)).catch(err=>alert(err.message));
+    }
+
     render() {
         const {classes,books} = this.props;
         return (
@@ -64,6 +70,12 @@ class BooksPage extends React.Component{
 function mapStateToProps(state) {
     return {
         books: state.BookDetail.books,
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        storeAllBooks: res => dispatch({type:"SHOW_BOOK",result:res})
     }
 }
 

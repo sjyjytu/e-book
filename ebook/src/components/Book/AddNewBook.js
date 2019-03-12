@@ -195,7 +195,7 @@ class AddNewBook extends React.Component{
                                 />
                                 <Button type="submit" variant="contained" color="primary"
                                         className={this.props.classes.submitButton}>
-                                    发布
+                                    提交
                                 </Button>
                             </form>
                         </Paper>
