@@ -116,7 +116,7 @@ class BookDetail extends React.Component{
     };
     render() {
         const {classes, books, _id} = this.props;
-        const [book] = books.filter(book=>book.bookname===this.props.match.params.bookname);
+        const [book] = books.filter(book=>book.bookname===this.props.match.params.ISBN);
         return (
             <div className={classes.superRoot}>
                 <Header/>
@@ -144,7 +144,7 @@ class BookDetail extends React.Component{
                         </div>
                         <input type="number" min="1" max="20" className={classes.inputNum} value={this.state.num}
                         onChange={event => {this.setState({num:event.target.value})}}/>
-                        <Button className={classes.addBtn} onClick={()=>this.props.addToCart(_id,book.bookname,/*parseInt(this.state.num)*/1)}>
+                        <Button className={classes.addBtn} onClick={()=>this.props.addToCart(_id,book.bookname,/*parseInt(this.state.num)*/1,book.ISBN)}>
                             加入购物车
                         </Button>
                         <Button className={classes.buyBtn}>
@@ -182,7 +182,7 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
     return {
-        addToCart: (_id, bookname, num) => Book.addToCart(_id, bookname, num).then(dispatch({
+        addToCart: (_id, bookname, num, ISBN) => Book.addToCart(_id, bookname, num, ISBN).then(dispatch({
             type: "ADD_TO_CART",
             bookname: bookname,
             num: num

@@ -49,7 +49,7 @@ class BookCard extends React.Component{
                     <Button size="small" color="primary">
                         {book.price}
                     </Button>
-                    <Link to={'book/' + book.bookname}>
+                    <Link to={'book/' + book.ISBN}>
                         详情
                     </Link>
                 </CardActions>

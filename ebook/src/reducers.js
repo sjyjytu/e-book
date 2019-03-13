@@ -28,7 +28,7 @@ function BookDetail(state={books: []},action) {
         case "SHOW_BOOK":
             return {books: action.result.books};
         case "ADD_BOOK":
-            //action.book {"bookname":  ,"stockNum":  , "summary":  ,"pictureUrl":  ,"price":  ,"author":  }
+            //action.book {"bookname":  ,"stockNum":  , "summary":  ,"pictureUrl":  ,"price":  ,"author":  ,"ISBN":  }
             const newState = Object.assign({}, state);
             newState.books.push(action.book);
             return newState;
