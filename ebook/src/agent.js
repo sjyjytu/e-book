@@ -14,10 +14,11 @@ const request = {
 //show books, add to cart, manage books and remove a book from cart
 export const Book = {
     showBooks: ()=>request.get('/api/get/books'),
-    addToCart: (_id, bookname, num) => request.post("/api/post/add",{"_id":_id,"bookname":bookname, "num": num}),
-    removeFromCart: (_id, bookname) => superagent.delete(RootUrl + "/api/delete/remove").set('Content-Type', 'application/json').send({
+    addToCart: (_id, bookname, num, ISBN) => request.post("/api/post/add",{"_id":_id,"bookname":bookname, "num": num, "ISBN": ISBN}),
+    removeFromCart: (_id, bookname, ISBN) => superagent.delete(RootUrl + "/api/delete/remove").set('Content-Type', 'application/json').send({
         "_id": _id,
-        "bookname": bookname
+        "bookname": bookname,
+        "ISBN": ISBN
     }).then(resBody),
     showCart: (_id) => request.get("/api/get/cart/" + _id),
 };
@@ -29,21 +30,22 @@ export const Manage = {
             "bookname": bookname, "stockNum": stockNum, "summary": summary, "pictureUrl": pictureUrl, "author": author,
             "price": price
         }*/book).then(resBody),
-    deleteABook: (bookname) => superagent.delete(RootUrl + "/api/manage/delete").set('Content-Type', 'application/json')
-        .send({"bookname": bookname}).then(resBody),
-    updateABook: (bookname, stockNum, summary, pictureUrl, author, price) => superagent.put(RootUrl + "/api/manage/update")
+    deleteABook: (_id, bookname, ISBN) => superagent.delete(RootUrl + "/api/manage/delete").set('Content-Type', 'application/json')
+        .send({"bookname": bookname, "_id": _id, "ISBN": ISBN}).then(resBody),
+    updateABook: (bookname, stockNum, summary, pictureUrl, author, price, ISBN) => superagent.put(RootUrl + "/api/manage/update")
         .set('Content-Type', 'application/json')
         .send({
             "bookname": bookname, "stockNum": stockNum, "summary": summary, "pictureUrl": pictureUrl, "author": author,
-            "price": price
+            "price": price, "ISBN": ISBN
         })
         .then(resBody),
-    banAUser: _id => superagent.put(RootUrl + "/api/manage/ban").set('Content-Type', 'application/json').send({"_id": _id}).then(resBody),
+    banAUser: _id => superagent.put(RootUrl + "/api/manage/ban").set('Content-Type', 'application/json')
+        .send({"_id": _id}).then(resBody),
 };
 
 export const Order = {
     showOrder: _id => request.get("/api/get/order/" + _id),
-    generateAnOrder: _id => request.post("/api/post/order", {"_id": _id}),
+    generateAnOrder: (_id, booksArr, totalPrice) => request.post("/api/post/order", {"_id": _id, "books": booksArr, "totalPrice": totalPrice}),
 };
 
 //
