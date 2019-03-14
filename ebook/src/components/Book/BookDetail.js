@@ -11,7 +11,7 @@ import RestoreIcon from '@material-ui/icons/Restore';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import {connect} from "react-redux";
-import {Book} from '../../agent';
+import {Book,Order} from '../../agent';
 
 const styles = theme => ({
     superRoot: {
@@ -106,17 +106,16 @@ class BookDetail extends React.Component{
         super(props);
         this.state = {
             value: 0,
-            num: '0',
         };
     }
-
-
     handleChange = (event, value) => {
         this.setState({ value });
     };
     render() {
         const {classes, books, _id} = this.props;
-        const [book] = books.filter(book=>book.bookname===this.props.match.params.ISBN);
+        let targetISBN = parseInt(this.props.match.params.ISBN);
+        const [book] = books.filter(book=>book.ISBN===targetISBN);
+        let numValue;
         return (
             <div className={classes.superRoot}>
                 <Header/>
@@ -124,7 +123,7 @@ class BookDetail extends React.Component{
                 <div className={classes.root}>
                     <div className={classes.left}>
                         <img src={book.pictureUrl}
-                        width="100%" height="100%"/>
+                             width="100%" height="100%"/>
                     </div>
                     <div className={classes.middle}>
                         <Typography variant="h4">{book.bookname}</Typography>
@@ -135,19 +134,28 @@ class BookDetail extends React.Component{
                             评论数：5201314
                         </Typography>
                         <div className={classes.price}>
-                                ￥ {book.price}
+                            ￥ {book.price}
                         </div>
                         <div className={classes.summary}>
                             <span className={classes.summarySpan}>
                                 {book.summary}
                             </span>
                         </div>
-                        <input type="number" min="1" max="20" className={classes.inputNum} value={this.state.num}
-                        onChange={event => {this.setState({num:event.target.value})}}/>
-                        <Button className={classes.addBtn} onClick={()=>this.props.addToCart(_id,book.bookname,/*parseInt(this.state.num)*/1,book.ISBN)}>
+                        <input type="number" min="1" max="20" className={classes.inputNum}
+                               ref={ref=>numValue=ref}
+                               />
+                        <Button className={classes.addBtn} onClick={
+                            () => (_id === '' ? alert("请先登录") :
+                                    this.props.addToCart(_id, book.bookname, numValue.value, book.ISBN)
+                            )
+                        }>
                             加入购物车
                         </Button>
-                        <Button className={classes.buyBtn}>
+                        <Button className={classes.buyBtn} onClick={
+                            () => (_id === '' ? alert("请先登录") :
+                                    this.props.buyNow(_id, [{"bookname":book.bookname,"num":numValue.value,"ISBN":book.ISBN}],book.price*numValue.value)
+                            )
+                        }>
                             立即购买
                         </Button>
                     </div>
@@ -163,9 +171,9 @@ class BookDetail extends React.Component{
                         onChange={this.handleChange}
                         showLabels
                     >
-                        <BottomNavigationAction label="商品评论" icon={<RestoreIcon />} />
-                        <BottomNavigationAction label="猜你喜欢" icon={<FavoriteIcon />} />
-                        <BottomNavigationAction label="附近的人" icon={<LocationOnIcon />} />
+                        <BottomNavigationAction label="商品评论" icon={<RestoreIcon/>}/>
+                        <BottomNavigationAction label="猜你喜欢" icon={<FavoriteIcon/>}/>
+                        <BottomNavigationAction label="附近的人" icon={<LocationOnIcon/>}/>
                     </BottomNavigation>
                     <Divider/>
                 </div>
@@ -185,8 +193,11 @@ function mapDispatchToProps(dispatch) {
         addToCart: (_id, bookname, num, ISBN) => Book.addToCart(_id, bookname, num, ISBN).then(dispatch({
             type: "ADD_TO_CART",
             bookname: bookname,
-            num: num
-        })).catch(err => alert(err.message))
+            num: num,
+            ISBN: ISBN
+        })).then(alert("加入购物车成功！")).catch(err => alert(err.message)),
+        buyNow: (_id, booksArr, totalPrice) => Order.generateAnOrder(_id,booksArr,totalPrice)
+            .then(alert("购买成功！")).catch(err => alert(err.message)),
     }
 }
 

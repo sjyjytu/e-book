@@ -70,14 +70,14 @@ function BookAndNum(state={books: []},action) {
             //action.bookname action.num
             const newState = Object.assign({}, state);
             for (var i = 0; i < newState.books.length; i++) {
-                if (newState.books[i].bookname === action.bookname) {
+                if (newState.books[i].ISBN === action.ISBN) {
                     //cart has this book
                     newState.books[i].num += action.num;
                     return newState;
                 }
             }
             //cart doesn't have this book
-            newState.books.push({"bookname": action.bookname, "num": action.num});
+            newState.books.push({"bookname": action.bookname, "num": action.num,"ISBN":action.ISBN});
             return newState;
         case "REMOVE_FROM_CART":
             const nState = Object.assign({}, state);
