@@ -26,6 +26,7 @@ function Redirect(state={redirectTo:null},action) {
 function BookDetail(state={books: []},action) {
     switch (action.type) {
         case "SHOW_BOOK":
+            //只存当前页的书
             return {books: action.result.books};
         case "ADD_BOOK":
             //action.book {"bookname":  ,"stockNum":  , "summary":  ,"pictureUrl":  ,"price":  ,"author":  ,"ISBN":  }
@@ -80,9 +81,9 @@ function BookAndNum(state={books: []},action) {
             return newState;
         case "REMOVE_FROM_CART":
             const nState = Object.assign({}, state);
-            //action.bookname
+            //action.ISBN
             for (var i = 0; i < nState.books.length; i++) {
-                if (nState.books[i].bookname === action.bookname) {
+                if (nState.books[i].ISBN === action.ISBN) {
                     //cart has this book
                     nState.books.splice(i, 1);
                     return nState;

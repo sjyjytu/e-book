@@ -7,13 +7,13 @@ function resBody(res) {
 }
 
 const request = {
-    get: url=>superagent.get(RootUrl+url).set('Content-Type','application/json').then(resBody),
+    get: (url,body)=>superagent.get(RootUrl+url).set('Content-Type','application/json').send(body).then(resBody),
     post:(url,body)=>superagent.post(RootUrl+url).set('Content-Type','application/json').send(body).then(resBody)
 };
 
 //show books, add to cart, manage books and remove a book from cart
 export const Book = {
-    showBooks: ()=>request.get('/api/get/books'),
+    showBooks: (num)=>request.get('/api/get/books',{"num":num}),
     addToCart: (_id, bookname, num, ISBN) => request.post("/api/post/add",{"_id":_id,"bookname":bookname, "num": num, "ISBN": ISBN}),
     removeFromCart: (_id, bookname, ISBN) => superagent.delete(RootUrl + "/api/delete/remove").set('Content-Type', 'application/json').send({
         "_id": _id,

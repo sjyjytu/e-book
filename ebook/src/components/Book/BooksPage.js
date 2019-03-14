@@ -6,6 +6,7 @@ import ChoosePage from '../Main/ChoosePage';
 import Grid from '@material-ui/core/Grid';
 import BookCard from './BookCard';
 import Catalog from '../Main/Catalog';
+import Pagination from './Pagination';
 import {connect} from "react-redux";
 import {Book} from "../../agent";
 
@@ -31,39 +32,48 @@ const styles = theme => ({
 });
 
 class BooksPage extends React.Component{
+    bookNPP = 20;  //book number per page
     constructor(props) {
         super(props);
+        this.state = {curPage:1,total:100};
+        this.bookPageOnChange = this.bookPageOnChange.bind(this);
     }
 
     componentDidMount() {
-        Book.showBooks().then(res=>this.props.storeAllBooks(res)).catch(err=>alert(err.message));
+        Book.showBooks(this.bookNPP).then(res=>{this.setState({totalPage:Math.ceil(res.count/this.bookNPP)||1});
+        return this.props.storePageBooks(res)}).catch(err=>alert(err.message));
     }
 
-    render() {
+    bookPageOnChange(page){
+        this.setState({curPage: page});
+    }
+
+        render() {
         const {classes,books} = this.props;
-        return (
-            <div className={classes.superRoot}>
-                <Header/>
-                <SearchBar/>
-                <ChoosePage/>
-                <Grid container spacing={0}>
-                    <Grid item xs={2}>
-                        <Catalog/>
+            return (
+                <div className={classes.superRoot}>
+                    <Header/>
+                    <SearchBar/>
+                    <ChoosePage/>
+                    <Grid container spacing={0}>
+                        <Grid item xs={2}>
+                            <Catalog/>
+                        </Grid>
+                        <Grid item xs={9} wrap="wrap">
+                            <div className={classes.root}>
+                                {
+                                    books.map((book) => (
+                                        <div className={classes.bookCard}>
+                                            <BookCard book={book}/>
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={9} wrap="wrap">
-                        <div className={classes.root}>
-                            {
-                                books.map((book)=>(
-                                    <div className={classes.bookCard}>
-                                        <BookCard book={book}/>
-                                    </div>
-                                ))
-                            }
-                        </div>
-                    </Grid>
-                </Grid>
-            </div>
-        );
+                    <Pagination total={this.state.total} onChange={page => this.bookPageOnChange(page)}/>
+                </div>
+            );
     }
 }
 
@@ -75,7 +85,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        storeAllBooks: res => dispatch({type:"SHOW_BOOK",result:res})
+        storePageBooks: res => dispatch({type:"SHOW_BOOK",result:res})
     }
 }
 
