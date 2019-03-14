@@ -131,7 +131,7 @@ class BookDetail extends React.Component{
                         <Typography variant="body1" color="inherit">
                             作者：{book.author}
                             {"       "}
-                            评论数：5201314
+                            库存：{book.stockNum}
                         </Typography>
                         <div className={classes.price}>
                             ￥ {book.price}

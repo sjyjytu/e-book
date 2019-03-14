@@ -14,13 +14,13 @@ const request = {
 //show books, add to cart, manage books and remove a book from cart
 export const Book = {
     showBooks: (start,num)=>request.post('/api/get/books',{"num":num,"start":start}),
-    addToCart: (_id, bookname, num, ISBN) => request.post("/api/post/add",{"_id":_id,"bookname":bookname, "num": num, "ISBN": ISBN}),
+    addToCart: (_id, bookname, num, ISBN) => request.post("/api/post/add",{"_id":parseInt(_id),"bookname":bookname, "num": num, "ISBN": ISBN}),
     removeFromCart: (_id, bookname, ISBN) => superagent.delete(RootUrl + "/api/delete/remove").set('Content-Type', 'application/json').send({
         "_id": _id,
         "bookname": bookname,
         "ISBN": ISBN
     }).then(resBody),
-    showCart: (_id) => request.get("/api/get/cart/" + _id),
+    showCart: (_id) => request.post("/api/get/cart",{"_id": _id}),
 };
 
 //the action of manager add a book, delete a book, update a book, ban a user
