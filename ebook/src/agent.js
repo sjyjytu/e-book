@@ -13,7 +13,7 @@ const request = {
 
 //show books, add to cart, manage books and remove a book from cart
 export const Book = {
-    showBooks: (num)=>request.get('/api/get/books',{"num":num}),
+    showBooks: (start,num)=>request.post('/api/get/books',{"num":num,"start":start}),
     addToCart: (_id, bookname, num, ISBN) => request.post("/api/post/add",{"_id":_id,"bookname":bookname, "num": num, "ISBN": ISBN}),
     removeFromCart: (_id, bookname, ISBN) => superagent.delete(RootUrl + "/api/delete/remove").set('Content-Type', 'application/json').send({
         "_id": _id,

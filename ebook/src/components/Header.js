@@ -78,7 +78,7 @@ class Header extends React.Component{
                                         管理用户
                                     </Button>
                                     :
-                                    <Button color="inherit" className={classes.button} href="#/cart/123456">
+                                    <Button color="inherit" className={classes.button} href="#/cart">
                                         <ShoppingCart className={classes.buttonIcon}/>
                                         购物车
                                     </Button>

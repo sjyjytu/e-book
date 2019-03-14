@@ -15,7 +15,7 @@ const BasicRoute = () => {
                 <Route exact path="/" component={HomePage}/>
                 <Route exact path="/all-books" component={BooksPage}/>
                 <Route exact path="/book/:ISBN" component={BookDetail}/>
-                <Route exact path="/cart/:id" component={ShoppingCart}/>
+                <Route exact path="/cart" component={ShoppingCart}/>
                 <Route exact path="/login" component={Login}/>
                 <Route exact path="/signup" component={SignUp}/>
                 <Route exact path="/add-new-book" component={AddNewBook}/>

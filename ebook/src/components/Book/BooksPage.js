@@ -32,20 +32,22 @@ const styles = theme => ({
 });
 
 class BooksPage extends React.Component{
-    bookNPP = 20;  //book number per page
+    bookNPP = 8;  //book number per page
     constructor(props) {
         super(props);
         this.state = {curPage:1,total:100};
         this.bookPageOnChange = this.bookPageOnChange.bind(this);
     }
 
-    componentDidMount() {
-        Book.showBooks(this.bookNPP).then(res=>{this.setState({totalPage:Math.ceil(res.count/this.bookNPP)||1});
+    componentWillMount() {
+        Book.showBooks(this.state.curPage,this.bookNPP).then(res=>{this.setState({total:res.count});
         return this.props.storePageBooks(res)}).catch(err=>alert(err.message));
     }
 
     bookPageOnChange(page){
         this.setState({curPage: page});
+        Book.showBooks(page,this.bookNPP).then(res=>{this.setState({totalPage:Math.ceil(res.count/this.bookNPP)||1});
+            return this.props.storePageBooks(res)}).catch(err=>alert(err.message));
     }
 
         render() {
@@ -71,7 +73,7 @@ class BooksPage extends React.Component{
                             </div>
                         </Grid>
                     </Grid>
-                    <Pagination total={this.state.total} onChange={page => this.bookPageOnChange(page)}/>
+                    <Pagination total={this.state.total} eachPageNum = {this.bookNPP} onChange={page => this.bookPageOnChange(page)}/>
                 </div>
             );
     }

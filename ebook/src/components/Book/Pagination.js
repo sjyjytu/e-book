@@ -19,16 +19,16 @@ class Pagination extends React.Component {
     }
 
     render() {
-        const {total} = this.props;
+        const {total,eachPageNum} = this.props;
         const {page} = this.state;
-        const allPage = Math.ceil(total / 10) || 1;
+        const allPage = Math.ceil(total / eachPageNum) || 1;
         return (
             allPage > 1 &&
             <Toolbar>
 
                 <div>
                     {
-                        `${(page - 1) * 10 + 1}-${page * 10} of ${total}`
+                        `${(page - 1) * eachPageNum + 1}-${page * eachPageNum} of ${total} Pages`
                     }
                 </div>
                 <div style={{marginLeft: '200px'}}>
