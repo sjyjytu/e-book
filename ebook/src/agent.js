@@ -45,7 +45,7 @@ export const Manage = {
 
 export const Order = {
     showOrder: _id => request.get("/api/get/order/" + _id),
-    generateAnOrder: (_id, booksArr, totalPrice) => request.post("/api/post/order", {"_id": _id, "books": booksArr, "totalPrice": totalPrice}),
+    generateAnOrder: (_id, booksArr, mode) => request.post("/api/post/order", {"_id": _id, "books": booksArr, "mode": mode}),
 };
 
 //

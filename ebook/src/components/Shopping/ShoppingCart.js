@@ -9,7 +9,7 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from "@material-ui/icons/Delete";
 import Header from '../Header';
-import {Book} from "../../agent";
+import {Book, Order} from "../../agent";
 import {connect} from "react-redux";
 
 
@@ -104,6 +104,12 @@ class Content extends React.Component{
                         </React.Fragment>
                     )}
                 </div>
+                <Button variant="contained" color="secondary" className={classes.deleteButton}
+                        onClick={() => Order.generateAnOrder(this.props._id, this.state.cart, "buy by cart").then(this.setState({cart:[]}))
+                            .catch(err=>alert(err.error))}>
+                    结算
+                    <DeleteIcon className={classes.rightIcon}/>
+                </Button>
             </div>
         );
     }

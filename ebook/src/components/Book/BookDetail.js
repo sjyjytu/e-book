@@ -141,19 +141,27 @@ class BookDetail extends React.Component{
                                 {book.summary}
                             </span>
                         </div>
-                        <input type="number" min="1" max="20" className={classes.inputNum}
-                               ref={ref=>numValue=ref}
-                               />
+                        <input type="number" min="1" max={book.stockNum} className={classes.inputNum}
+                               ref={ref => numValue = ref}
+                        />
                         <Button className={classes.addBtn} onClick={
                             () => (_id === '' ? alert("请先登录") :
-                                    this.props.addToCart(_id, book.bookname, numValue.value, book.ISBN)
+                                    (numValue.value > book.stockNum ? alert("库存不足") :
+                                        (numValue.value <= 0 || numValue.value === 'undefined' ? alert("请正确填写数量") :
+                                            this.props.addToCart(_id, book.bookname, numValue.value, book.ISBN)))
                             )
                         }>
                             加入购物车
                         </Button>
                         <Button className={classes.buyBtn} onClick={
                             () => (_id === '' ? alert("请先登录") :
-                                    this.props.buyNow(_id, [{"bookname":book.bookname,"num":numValue.value,"ISBN":book.ISBN}],book.price*numValue.value)
+                                    (numValue.value > book.stockNum ? alert("库存不足") :
+                                        (numValue.value <= 0 || numValue.value === 'undefined' ? alert("请正确填写数量") :
+                                            this.props.buyNow(_id, [{
+                                                "bookname": book.bookname,
+                                                "num": numValue.value,
+                                                "ISBN": book.ISBN
+                                            }], "buy directly")))
                             )
                         }>
                             立即购买
@@ -196,7 +204,7 @@ function mapDispatchToProps(dispatch) {
             num: num,
             ISBN: ISBN
         })).then(alert("加入购物车成功！")).catch(err => alert(err.message)),
-        buyNow: (_id, booksArr, totalPrice) => Order.generateAnOrder(_id,booksArr,totalPrice)
+        buyNow: (_id, booksArr, mode) => Order.generateAnOrder(_id,booksArr,mode)
             .then(alert("购买成功！")).catch(err => alert(err.message)),
     }
 }
