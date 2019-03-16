@@ -33,10 +33,10 @@ class ChoosePage extends React.Component{
                         <Button className={classes.button} fullWidth={true} href='#/all-books'>所有图书</Button>
                     </Grid>
                     <Grid item xs={4}>
-                        <Button className={classes.button} fullWidth={true}>按类划分</Button>
+                        <Button className={classes.button} fullWidth={true}>用户管理</Button>
                     </Grid>
                     <Grid item xs={4}>
-                        <Button className={classes.button} fullWidth={true} href="#/add-new-book">新增/删除</Button>
+                        <Button className={classes.button} fullWidth={true} href="#/add-new-book">新增图书</Button>
                     </Grid>
                 </Grid>
                 <Divider/>

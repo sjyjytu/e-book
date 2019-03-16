@@ -10,6 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import {Link} from 'react-router-dom';
 import {Login} from '../../agent';
 import {connect} from "react-redux";
+import {IconButton} from "@material-ui/core";
+import {Delete} from "@material-ui/icons";
 
 const styles = {
     card: {
@@ -20,6 +22,11 @@ const styles = {
     },
     author:{
         color:'gray'
+    },
+    deleteButton:{
+        position:'absolute',
+        float:'right',
+        marginLeft: '120',
     }
 };
 
@@ -38,6 +45,13 @@ class BookCard extends React.Component{
                         image={book.pictureUrl}
                         title="Contemplative Reptile"
                     />
+                    {
+                        isManager?
+                            <IconButton className={classes.deleteButton}>
+                                <Delete/>
+                            </IconButton>
+                            :null
+                    }
                     <CardContent>
                         <Typography gutterBottom variant="h6" component="h4">
                             {book.bookname}

@@ -293,7 +293,7 @@ function mapDispatchToProps(dispatch) {
     return {
         updateBook: (book) => {
             Manage.updateABook(book)
-                .then(res=>dispatch({type:'UPDATE_BOOK',book:book}))
+                .then(()=>dispatch({type:'UPDATE_BOOK',book:book}))
                 .catch(()=>alert("add book failed"));
         },
         onRedirect: () => dispatch({type: 'REDIRECTED'})
