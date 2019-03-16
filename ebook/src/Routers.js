@@ -7,6 +7,7 @@ import ShoppingCart from "./components/Shopping/ShoppingCart";
 import SignUp from './components/SignUp';
 import Login from './components/Login';
 import AddNewBook from './components/Book/AddNewBook';
+import UpdateBook from './components/Book/UpdateBook';
 
 const BasicRoute = () => {
     return (
@@ -19,6 +20,7 @@ const BasicRoute = () => {
                 <Route exact path="/login" component={Login}/>
                 <Route exact path="/signup" component={SignUp}/>
                 <Route exact path="/add-new-book" component={AddNewBook}/>
+                <Route exact path="/update/:ISBN" component={UpdateBook}/>
             </Switch>
         </HashRouter>
     );

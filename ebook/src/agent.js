@@ -34,12 +34,12 @@ export const Manage = {
         }*/book).then(resBody),
     deleteABook: (_id, bookname, ISBN) => superagent.delete(RootUrl + "/api/manage/delete").set('Content-Type', 'application/json')
         .send({"bookname": bookname, "_id": _id, "ISBN": ISBN}).then(resBody),
-    updateABook: (bookname, stockNum, summary, pictureUrl, author, price, ISBN) => superagent.put(RootUrl + "/api/manage/update")
+    updateABook: (/*bookname, stockNum, summary, pictureUrl, author, price, ISBN*/book) => superagent.put(RootUrl + "/api/manage/update")
         .set('Content-Type', 'application/json')
-        .send({
+        .send(/*{
             "bookname": bookname, "stockNum": stockNum, "summary": summary, "pictureUrl": pictureUrl, "author": author,
             "price": price, "ISBN": ISBN
-        })
+        }*/book)
         .then(resBody),
     banAUser: _id => superagent.put(RootUrl + "/api/manage/ban").set('Content-Type', 'application/json')
         .send({"_id": _id}).then(resBody),

@@ -8,6 +8,8 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import {Link} from 'react-router-dom';
+import {Login} from '../../agent';
+import {connect} from "react-redux";
 
 const styles = {
     card: {
@@ -27,7 +29,7 @@ class BookCard extends React.Component{
     }
 
     render() {
-        const { classes,book } = this.props;
+        const { classes,book, isManager } = this.props;
         return (
             <Card className={classes.card}>
                 <CardActionArea>
@@ -49,17 +51,27 @@ class BookCard extends React.Component{
                     <Button size="small" color="primary">
                         {book.price}
                     </Button>
-                    <Link to={'book/' + book.ISBN}>
-                        详情
-                    </Link>
+                    {isManager?
+                        <Link to={'book/' + book.ISBN}>
+                            详情
+                        </Link>:
+                        <Link to={'update/' + book.ISBN}>
+                            更改
+                        </Link>
+                    }
+
                 </CardActions>
             </Card>
         );
     }
 
-
 }
 
+function mapStateToProps(state) {
+    return {
+        isManager: state.Login.isManager
+    }
+}
 
-export default withStyles(styles)(BookCard);
+export default connect(mapStateToProps)(withStyles(styles)(BookCard));
 
