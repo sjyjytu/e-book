@@ -1,11 +1,14 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 import Grid from '@material-ui/core/Grid';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import {connect} from "react-redux";
+import {Book} from "../../agent";
+import {IconButton, Radio} from "@material-ui/core";
+import Button from "@material-ui/core/Button";
 
 const styles = theme => ({
     inputInput: {
@@ -27,13 +30,13 @@ const styles = theme => ({
     },
     searchIcon: {
         marginLeft:theme.spacing.unit,
-        width: theme.spacing.unit * 9,
+        //width: theme.spacing.unit * 2,
         height: '100%',
         position: 'absolute',
-        pointerEvents: 'none',
+        //pointerEvents: 'none',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'left',
+        justifyContent: 'right',
     },
     search: {
         position: 'relative',
@@ -59,14 +62,37 @@ const styles = theme => ({
     },
     title: {
         overflow: 'visible',
-        marginLeft: theme.spacing.unit,
+        marginLeft: theme.spacing.unit*3,
+    },
+    radio:{
+        display: 'inline-block',
+        width: '10px',
     }
 });
 
 class SearchBar extends React.Component{
     constructor(props) {
         super(props);
+        this.state = {
+            key: '',
+            by: 'ISBN'
+        };
+        this.handleRadioChange = this.handleRadioChange.bind(this);
     }
+
+    searchOnClick(key,by) {
+        this.setState({key: ''});
+        if (by === 'ISBN') {
+            Book.getBookByISBN(key).then(res => this.props.searchBooks(res)).catch(err => err.message);
+        } else {
+            Book.getBookByName(key).then(res => this.props.searchBooks(res)).catch(err => err.message);
+        }
+    }
+
+    handleRadioChange(e) {
+        this.setState({by: e.target.value});
+    }
+
     render() {
         const {classes} = this.props;
         return (
@@ -78,17 +104,40 @@ class SearchBar extends React.Component{
                         </Typography>
                     </Grid>
                     <Grid item xs={6}>
+                        <Typography variant="h6" color="inherit">
+                            通过以下方式查找书:
+                        </Typography>
+                        <Radio
+                            checked={this.state.by === 'ISBN'}
+                            onChange={this.handleRadioChange}
+                            value="ISBN"
+                            name="radio-button"
+                            aria-label="ISBN"
+                            checkedIcon={"书名"}
+                        />
+                        <Radio
+                            checked={this.state.by === 'bookname'}
+                            onChange={this.handleRadioChange}
+                            value="bookname"
+                            name="radio-button"
+                            aria-label="bookname"
+                            checkedIcon={"ISBN"}
+                        />
                         <div className={classes.search}>
-                            <div className={classes.searchIcon}>
-                                <SearchIcon />
-                            </div>
+                            <Button className={classes.searchIcon}
+                                        onClick={() => this.searchOnClick(this.state.key, this.state.by)}>
+                                <SearchIcon/>
+                                Go
+                            </Button>
+
                             <InputBase
-                                placeholder="搜索书名..."
+                                placeholder={"输入书名或ISBN查找书..."}
                                 classes={{
                                     root: classes.inputRoot,
                                     input: classes.inputInput,
                                 }}
-                            />
+                                value={this.state.key}
+                                onChange={e => this.setState({key: e.target.value})}/>
                         </div>
                     </Grid>
                 </Grid>
@@ -97,4 +146,10 @@ class SearchBar extends React.Component{
     }
 }
 
-export default withStyles(styles)(SearchBar);
+function mapDispatchToProps(dispatch) {
+    return {
+        searchBooks: res => dispatch({type:"SHOW_BOOK",result:res})
+    }
+}
+
+export default connect(mapDispatchToProps)(withStyles(styles)(SearchBar));

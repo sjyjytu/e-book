@@ -21,6 +21,8 @@ export const Book = {
         "ISBN": ISBN
     }).then(resBody),
     showCart: (_id) => request.post("/api/get/cart",{"_id": _id}),
+    getBookByISBN: (ISBN) => request.post('/api/get/book',{"ISBN": ISBN}),
+    getBookByName: (bookname) => request.post("/api/get/book",{"bookname": bookname}),
 };
 
 //the action of manager add a book, delete a book, update a book, ban a user
