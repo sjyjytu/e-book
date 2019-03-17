@@ -53,6 +53,9 @@ const styles = theme => ({
     },
     rightIcon: {
         marginLeft: theme.spacing.unit,
+    },
+    price:{
+
     }
 });
 
@@ -61,55 +64,41 @@ const styles = theme => ({
 class Order extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {cart: []};
-        this.removeButtonClick = this.removeButtonClick.bind(this);
+        this.state = {orders: []};
     }
 
     componentDidMount() {
-        Book.showCart(this.props._id).then(res=> this.setState({cart:res.books})).catch(err=>alert(err.message));
+        Order.showOrder(this.props._id).then(res=> this.setState({orders:res.orders})).catch(err=>alert(err.message));
     }
 
-    removeButtonClick = (_id, bookname, ISBN) =>
-        Book.removeFromCart(_id, bookname, ISBN).then(() => {
-                const oldCart = this.state.cart;
-                console.log(oldCart);
-                const newCart = oldCart.filter(book=>ISBN!==book.ISBN);
-                console.log(newCart);
-                this.setState({cart: newCart});
-            }
-        ).catch(err=>alert("移除书失败！"));
-
     render() {
-        const {classes/*, removeButtonClick*/} = this.props;
-        const {cart} = this.state;
+        const {classes} = this.props;
+        const {orders} = this.state;
         return (
             <div className={classes.superRoot}>
                 <Header/>
                 <div className={classes.root}>
-                    {cart.map(book =>
-                        <React.Fragment key={book.ISBN}>
+                    {orders.map(order =>
+                        <React.Fragment key={order.orderId}>
                             <Toolbar>
-                                <Avatar className={classes.avatar} alt="Book" children="书"/>
-                                <Typography variant="h6">{book.ISBN}</Typography>
+                                <Avatar className={classes.avatar} alt="Order" children="订单"/>
+                                <Typography variant="h6">{order.userId}</Typography>
                             </Toolbar>
-                            <Typography className={classes.title}>{book.bookname}</Typography>
-                            <Typography className={classes.summary}>{"数量：" + book.num}</Typography>
-                            <Link to={'book/' + book.ISBN} className={classes.link}>详情</Link>
-                            <Button variant="contained" color="secondary" className={classes.deleteButton}
-                                    onClick={() => this.removeButtonClick(this.props._id, book.bookname, book.ISBN)}>
-                                不要你了
-                                <DeleteIcon className={classes.rightIcon}/>
-                            </Button>
+                            <Typography className={classes.title}>{order.createTime}</Typography>
+                            <div className={classes.summary}>
+                                {
+                                    order.books.map(book=> {
+                                        return <Typography>
+                                                {book.name}x{book.num}
+                                        </Typography>;
+                                    })
+                                }
+                            </div>
+                            <Typography className={classes.price}>{"总价：" + order.totalPrice}</Typography>
                             <Divider className={classes.divider}/>
                         </React.Fragment>
                     )}
                 </div>
-                <Button variant="contained" color="secondary" className={classes.deleteButton}
-                        onClick={() => Order.generateAnOrder(this.props._id, this.state.cart, "buy by cart").then(this.setState({cart:[]}))
-                            .catch(err=>alert(err.error))}>
-                    结算
-                    <DeleteIcon className={classes.rightIcon}/>
-                </Button>
             </div>
         );
     }
@@ -120,8 +109,7 @@ Order.propTypes = {
 };
 
 function mapStateToProps(state) {
-    const {Login/*, BookAndNum*/} = state;
-    return {_id: Login._id/*, cart:BookAndNum.books*/};
+    return {_id: state.Login._id/*, cart:BookAndNum.books*/};
 }
 
 function mapDispatchToProps(dispatch) {
