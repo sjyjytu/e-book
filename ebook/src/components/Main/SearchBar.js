@@ -131,7 +131,7 @@ class SearchBar extends React.Component{
                             </Button>
 
                             <InputBase
-                                placeholder={"输入书名或ISBN查找书..."}
+                                placeholder={"输入关键字查找..."}
                                 classes={{
                                     root: classes.inputRoot,
                                     input: classes.inputInput,

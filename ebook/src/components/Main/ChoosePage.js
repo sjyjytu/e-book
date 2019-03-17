@@ -25,19 +25,34 @@ class ChoosePage extends React.Component{
         super(props);
     }
     render() {
-        const {classes} = this.props;
+        const {classes, isManager} = this.props;
         return (
             <div className={classes.root}>
                 <Grid container spacing={24} alignItems="center">
-                    <Grid item xs={4}>
-                        <Button className={classes.button} fullWidth={true} href='#/all-books'>所有图书</Button>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Button className={classes.button} fullWidth={true}>用户管理</Button>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Button className={classes.button} fullWidth={true} href="#/add-new-book">新增图书</Button>
-                    </Grid>
+                    {isManager?
+                        <React.Fragment>
+                            <Grid item xs={4}>
+                                <Button className={classes.button} fullWidth={true} href='#/all-books'>图书管理</Button>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <Button className={classes.button} fullWidth={true} href='#/manage-users'>用户管理</Button>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <Button className={classes.button} fullWidth={true} href="#/add-new-book">订单管理</Button>
+                            </Grid>
+                        </React.Fragment>
+                    :
+                        <React.Fragment>
+                            <Grid item xs={4}>
+                                <Button className={classes.button} fullWidth={true} href='#/all-books'>所有图书</Button>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <Button className={classes.button} fullWidth={true}>新书推荐</Button>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <Button className={classes.button} fullWidth={true}>我的订单</Button>
+                            </Grid>
+                        </React.Fragment>}
                 </Grid>
                 <Divider/>
             </div>
@@ -45,4 +60,10 @@ class ChoosePage extends React.Component{
     }
 }
 
-export default withStyles(styles)(ChoosePage);
+function mapStateToProps(state) {
+    return {
+        isManager: state.Login.isManager,
+    }
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(ChoosePage));

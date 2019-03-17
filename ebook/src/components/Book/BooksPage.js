@@ -8,7 +8,7 @@ import BookCard from './BookCard';
 import Catalog from '../Main/Catalog';
 import Pagination from './Pagination';
 import {connect} from "react-redux";
-import {Book} from "../../agent";
+import {Book, Manage} from "../../agent";
 
 const styles = theme => ({
     superRoot:{
@@ -35,8 +35,9 @@ class BooksPage extends React.Component{
     bookNPP = 8;  //book number per page
     constructor(props) {
         super(props);
-        this.state = {curPage:1,total:100};
+        this.state = {curPage:1,total:0};
         this.bookPageOnChange = this.bookPageOnChange.bind(this);
+        this.deleteBook = this.deleteBook.bind(this);
     }
 
     componentWillMount() {
@@ -50,6 +51,10 @@ class BooksPage extends React.Component{
             return this.props.storePageBooks(res)}).catch(err=>alert(err.message));
     }
 
+    deleteBook(_id, bookname, ISBN) {
+        Manage.deleteABook(_id, bookname, ISBN).then(this, this.props.deleteBook(ISBN)).catch(err => alert(err.message));
+        this.forceUpdate();
+    }
         render() {
         const {classes,books} = this.props;
             return (
@@ -66,7 +71,7 @@ class BooksPage extends React.Component{
                                 {
                                     books.map((book) => (
                                         <div className={classes.bookCard}>
-                                            <BookCard book={book}/>
+                                            <BookCard book={book} deleteBook={this.deleteBook}/>
                                         </div>
                                     ))
                                 }
@@ -87,7 +92,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        storePageBooks: res => dispatch({type:"SHOW_BOOK",result:res})
+        storePageBooks: res => dispatch({type:"SHOW_BOOK",result:res}),
+        deleteBook: ISBN=>dispatch({type:"DELETE_BOOK",ISBN:ISBN}),
     }
 }
 

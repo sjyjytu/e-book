@@ -58,7 +58,7 @@ const styles = theme => ({
 
 
 
-class ShoppingCart extends React.Component{
+class Order extends React.Component{
     constructor(props) {
         super(props);
         this.state = {cart: []};
@@ -115,7 +115,7 @@ class ShoppingCart extends React.Component{
     }
 }
 
-ShoppingCart.propTypes = {
+Order.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -134,4 +134,4 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(ShoppingCart));
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(Order));

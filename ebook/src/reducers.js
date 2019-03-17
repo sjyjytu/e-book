@@ -34,10 +34,10 @@ function BookDetail(state={books: []},action) {
             newState.books.push(action.book);
             return newState;
         case "DELETE_BOOK":
-            //action.bookname
+            //action.ISBN
             const newState2 = Object.assign({}, state);
             for (var i = 0; i < newState2.books.length; i++) {
-                if (newState2.books[i].bookname === action.bookname) {
+                if (newState2.books[i].ISBN === action.ISBN) {
                     //cart has this book
                     newState2.books.splice(i, 1);
                     return newState2;

@@ -24,9 +24,10 @@ const styles = {
         color:'gray'
     },
     deleteButton:{
-        position:'absolute',
-        float:'right',
-        marginLeft: '120',
+        //position:'absolute',
+        //float:'right',
+        padding: '6px',
+        marginLeft: '10px'
     }
 };
 
@@ -36,7 +37,7 @@ class BookCard extends React.Component{
     }
 
     render() {
-        const { classes,book, isManager } = this.props;
+        const { classes,book, isManager, _id, deleteBook} = this.props;
         return (
             <Card className={classes.card}>
                 <CardActionArea>
@@ -45,13 +46,7 @@ class BookCard extends React.Component{
                         image={book.pictureUrl}
                         title="Contemplative Reptile"
                     />
-                    {
-                        isManager?
-                            <IconButton className={classes.deleteButton}>
-                                <Delete/>
-                            </IconButton>
-                            :null
-                    }
+
                     <CardContent>
                         <Typography gutterBottom variant="h6" component="h4">
                             {book.bookname}
@@ -65,15 +60,22 @@ class BookCard extends React.Component{
                     <Button size="small" color="primary">
                         {book.price}
                     </Button>
-                    {isManager?
+                    {!isManager?
                         <Link to={'book/' + book.ISBN}>
                             详情
                         </Link>:
                         <Link to={'update/' + book.ISBN}>
-                            更改
+                            修改
                         </Link>
                     }
-
+                    {
+                        isManager?
+                            <IconButton className={classes.deleteButton}
+                            onClick={()=>deleteBook(_id, book.bookname, book.ISBN)}>
+                                <Delete/>
+                            </IconButton>
+                            :null
+                    }
                 </CardActions>
             </Card>
         );
@@ -83,9 +85,11 @@ class BookCard extends React.Component{
 
 function mapStateToProps(state) {
     return {
-        isManager: state.Login.isManager
+        isManager: state.Login.isManager,
+        _id: state.Login._id
     }
 }
+
 
 export default connect(mapStateToProps)(withStyles(styles)(BookCard));
 

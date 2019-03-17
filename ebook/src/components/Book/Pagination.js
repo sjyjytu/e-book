@@ -2,6 +2,7 @@ import React from "react";
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import {Button,Toolbar} from "@material-ui/core";
+import {connect} from "react-redux";
 
 class Pagination extends React.Component {
 
@@ -19,11 +20,11 @@ class Pagination extends React.Component {
     }
 
     render() {
-        const {total,eachPageNum} = this.props;
+        const {total,eachPageNum,isManager} = this.props;
         const {page} = this.state;
         const allPage = Math.ceil(total / eachPageNum) || 1;
         return (
-            allPage > 1 &&
+            //allPage > 1 &&
             <Toolbar>
 
                 <div>
@@ -50,10 +51,22 @@ class Pagination extends React.Component {
                         </Button>
                     }
                 </div>
-
+                {isManager?
+                    <div style={{marginLeft:'400px'}}>
+                        <Button size="large" variant="outlined" href="#/add-new-book">
+                            新增图书
+                        </Button>
+                    </div>
+                :null}
             </Toolbar>
         )
     }
 }
 
-export default Pagination
+function mapStateToProps(state) {
+    return {
+        isManager: state.Login.isManager,
+    }
+}
+
+export default connect(mapStateToProps)(Pagination);

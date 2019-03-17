@@ -7,7 +7,7 @@ function resBody(res) {
 }
 
 const request = {
-    get: (url,body)=>superagent.get(RootUrl+url).set('Content-Type','application/json').send(body).then(resBody),
+    get: (url)=>superagent.get(RootUrl+url).set('Content-Type','application/json').then(resBody),
     post:(url,body)=>superagent.post(RootUrl+url).set('Content-Type','application/json').send(body).then(resBody)
 };
 
@@ -42,7 +42,8 @@ export const Manage = {
         }*/book)
         .then(resBody),
     banAUser: _id => superagent.put(RootUrl + "/api/manage/ban").set('Content-Type', 'application/json')
-        .send({"_id": _id}).then(resBody),
+        .send({"_id": _id.toString()}).then(resBody),
+    showUsers: () => request.get("/api/get/users")
 };
 
 export const Order = {
