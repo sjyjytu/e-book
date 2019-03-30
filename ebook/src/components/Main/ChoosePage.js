@@ -25,7 +25,7 @@ class ChoosePage extends React.Component{
         super(props);
     }
     render() {
-        const {classes, isManager} = this.props;
+        const {classes, isManager, _id} = this.props;
         return (
             <div className={classes.root}>
                 <Grid container spacing={24} alignItems="center">
@@ -38,19 +38,19 @@ class ChoosePage extends React.Component{
                                 <Button className={classes.button} fullWidth={true} href='#/manage-users'>用户管理</Button>
                             </Grid>
                             <Grid item xs={4}>
-                                <Button className={classes.button} fullWidth={true} href="#/add-new-book">订单管理</Button>
+                                <Button className={classes.button} fullWidth={true} href="#/order">订单管理</Button>
                             </Grid>
                         </React.Fragment>
                     :
                         <React.Fragment>
                             <Grid item xs={4}>
-                                <Button className={classes.button} fullWidth={true} href='#/all-books'>所有图书</Button>
+                                <Button className={classes.button} fullWidth={true} onClick={()=>this.props.update()}>所有图书</Button>
                             </Grid>
                             <Grid item xs={4}>
                                 <Button className={classes.button} fullWidth={true}>新书推荐</Button>
                             </Grid>
                             <Grid item xs={4}>
-                                <Button className={classes.button} fullWidth={true}>我的订单</Button>
+                                <Button className={classes.button} fullWidth={true} href="#/order" disabled={_id===''}>我的订单</Button>
                             </Grid>
                         </React.Fragment>}
                 </Grid>
@@ -63,7 +63,14 @@ class ChoosePage extends React.Component{
 function mapStateToProps(state) {
     return {
         isManager: state.Login.isManager,
+        _id: state.Login._id,
     }
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(ChoosePage));
+function mapDispatchToProps(dispatch) {
+    return {
+        update: ()=>dispatch({type:"UPDATE"})
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(ChoosePage));

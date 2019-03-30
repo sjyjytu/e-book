@@ -9,6 +9,7 @@ import Catalog from '../Main/Catalog';
 import Pagination from './Pagination';
 import {connect} from "react-redux";
 import {Book, Manage} from "../../agent";
+import {Button} from "@material-ui/core";
 
 const styles = theme => ({
     superRoot:{
@@ -32,27 +33,27 @@ const styles = theme => ({
 });
 
 class BooksPage extends React.Component{
-    bookNPP = 8;  //book number per page
+    bookNPP = 3;  //book number per page
     constructor(props) {
         super(props);
-        this.state = {curPage:1,total:0};
+        this.state = {curPage:1,total:0,update:this.props.update};
         this.bookPageOnChange = this.bookPageOnChange.bind(this);
         this.deleteBook = this.deleteBook.bind(this);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         Book.showBooks(this.state.curPage,this.bookNPP).then(res=>{this.setState({total:res.count});
-        return this.props.storePageBooks(res)}).catch(err=>alert(err.message));
+        return this.props.storePageBooks(res)}).catch(err=>alert(err));
     }
 
     bookPageOnChange(page){
         this.setState({curPage: page});
         Book.showBooks(page,this.bookNPP).then(res=>{this.setState({totalPage:Math.ceil(res.count/this.bookNPP)||1});
-            return this.props.storePageBooks(res)}).catch(err=>alert(err.message));
+            return this.props.storePageBooks(res)}).catch(err=>alert(err));
     }
 
     deleteBook(_id, bookname, ISBN) {
-        Manage.deleteABook(_id, bookname, ISBN).then(this, this.props.deleteBook(ISBN)).catch(err => alert(err.message));
+        Manage.deleteABook(_id, bookname, ISBN).then(this, this.props.deleteBook(ISBN)).catch(err => alert(err));
         this.forceUpdate();
     }
         render() {
@@ -67,17 +68,23 @@ class BooksPage extends React.Component{
                             <Catalog/>
                         </Grid>
                         <Grid item xs={9} wrap="wrap">
-                            <div className={classes.root}>
-                                {
-                                    books.map((book) => (
-                                        <div className={classes.bookCard}>
-                                            <BookCard book={book} deleteBook={this.deleteBook}/>
-                                        </div>
-                                    ))
-                                }
-                            </div>
+                            {
+                                books!==undefined?
+                                    <div className={classes.root}>
+                                        {
+                                            books.map((book) => (
+                                                <div className={classes.bookCard}>
+                                                    <BookCard book={book} deleteBook={this.deleteBook}/>
+                                                </div>
+                                            ))
+                                        }
+                                    </div>:
+                                    <p className={classes.root}>没有符合条件的书籍</p>
+                            }
+
                         </Grid>
                     </Grid>
+                    <Button onClick={()=>this.forceUpdate()}>update</Button>
                     <Pagination total={this.state.total} eachPageNum = {this.bookNPP} onChange={page => this.bookPageOnChange(page)}/>
                 </div>
             );
@@ -87,6 +94,7 @@ class BooksPage extends React.Component{
 function mapStateToProps(state) {
     return {
         books: state.BookDetail.books,
+        update: state.BookDetail.update,
     }
 }
 

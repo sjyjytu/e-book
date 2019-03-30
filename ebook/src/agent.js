@@ -1,8 +1,13 @@
 var superagent = require('superagent');
 
-const RootUrl = 'http://localhost:8080/ebookmavenend';
+const RootUrl = 'http://localhost:8080/ebook2';
 
 function resBody(res) {
+    let body = res.body;
+    if (body.error!==undefined)
+    {
+        throw body.error;
+    }
     return res.body;
 }
 
@@ -34,20 +39,20 @@ export const Manage = {
         }*/book).then(resBody),
     deleteABook: (_id, bookname, ISBN) => superagent.delete(RootUrl + "/api/manage/delete").set('Content-Type', 'application/json')
         .send({"bookname": bookname, "_id": _id, "ISBN": ISBN}).then(resBody),
-    updateABook: (/*bookname, stockNum, summary, pictureUrl, author, price, ISBN*/book) => superagent.put(RootUrl + "/api/manage/update")
+    updateABook: (/*bookname, stockNum, summary, pictureUrl, author, price, ISBN*/book) => superagent.post(RootUrl + "/api/manage/update")
         .set('Content-Type', 'application/json')
         .send(/*{
             "bookname": bookname, "stockNum": stockNum, "summary": summary, "pictureUrl": pictureUrl, "author": author,
             "price": price, "ISBN": ISBN
         }*/book)
         .then(resBody),
-    banAUser: _id => superagent.put(RootUrl + "/api/manage/ban").set('Content-Type', 'application/json')
+    banAUser: _id => superagent.post(RootUrl + "/api/manage/ban").set('Content-Type', 'application/json')
         .send({"_id": _id.toString()}).then(resBody),
     showUsers: () => request.get("/api/get/users")
 };
 
 export const Order = {
-    showOrder: _id => request.get("/api/get/order/" + _id),
+    showOrder: _id => {return request.post("/api/get/order",{"_id": _id})},
     generateAnOrder: (_id, booksArr, mode) => request.post("/api/post/order", {"_id": _id, "books": booksArr, "mode": mode}),
 };
 

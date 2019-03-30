@@ -122,7 +122,7 @@ class BookDetail extends React.Component{
                 <SearchBar/>
                 <div className={classes.root}>
                     <div className={classes.left}>
-                        <img src={book.pictureUrl}
+                        <img src={book.pictureUrl} alt="别买了，这书连封面都没有"
                              width="100%" height="100%"/>
                     </div>
                     <div className={classes.middle}>
@@ -203,9 +203,9 @@ function mapDispatchToProps(dispatch) {
             bookname: bookname,
             num: num,
             ISBN: ISBN
-        })).then(alert("加入购物车成功！")).catch(err => alert(err.message)),
+        })).then(alert("加入购物车成功！")).catch(err => alert(err)),
         buyNow: (_id, booksArr, mode) => Order.generateAnOrder(_id,booksArr,mode)
-            .then(alert("购买成功！")).catch(err => alert(err.message)),
+            .then(alert("购买成功！")).catch(err => alert(err)),
     }
 }
 

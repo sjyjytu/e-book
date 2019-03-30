@@ -16,6 +16,7 @@ function Redirect(state={redirectTo:null},action) {
         case 'SIGN_UP':
         case 'ADD_BOOK':
         case 'LOGIN':
+        case "UPDATE_BOOK":
             return {redirectTo: '/'};
         default:
             return state;
@@ -23,11 +24,14 @@ function Redirect(state={redirectTo:null},action) {
     }
 }
 
-function BookDetail(state={books: []},action) {
+function BookDetail(state={books: [], update:false},action) {
     switch (action.type) {
+        case "UPDATE":
+            const update = state.update;
+            return Object.assign({},{books:state.books, update: !update});
         case "SHOW_BOOK":
             //只存当前页的书
-            return {books: action.result.books};
+            return Object.assign({},{books: action.result.books,update:state.update});
         case "ADD_BOOK":
             //action.book {"bookname":  ,"stockNum":  , "summary":  ,"pictureUrl":  ,"price":  ,"author":  ,"ISBN":  }
             const newState = Object.assign({}, state);
@@ -36,7 +40,7 @@ function BookDetail(state={books: []},action) {
         case "DELETE_BOOK":
             //action.ISBN
             const newState2 = Object.assign({}, state);
-            for (var i = 0; i < newState2.books.length; i++) {
+            for (let i = 0; i < newState2.books.length; i++) {
                 if (newState2.books[i].ISBN === action.ISBN) {
                     //cart has this book
                     newState2.books.splice(i, 1);
@@ -48,7 +52,7 @@ function BookDetail(state={books: []},action) {
         case "UPDATE_BOOK":
             //action.book
             const newState3 = Object.assign({}, state);
-            for (var i = 0; i < newState3.books.length; i++) {
+            for (let i = 0; i < newState3.books.length; i++) {
                 if (newState3.books[i].bookname === action.book.bookname) {
                     //book exits
                     Object.assign(newState3.books[i],action.book);
@@ -69,7 +73,7 @@ function BookAndNum(state={books: []},action) {
         case "ADD_TO_CART":
             //action.bookname action.num
             const newState = Object.assign({}, state);
-            for (var i = 0; i < newState.books.length; i++) {
+            for (let i = 0; i < newState.books.length; i++) {
                 if (newState.books[i].ISBN === action.ISBN) {
                     //cart has this book
                     newState.books[i].num += action.num;

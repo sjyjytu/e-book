@@ -65,7 +65,7 @@ class ManageUser extends React.Component{
     }
 
     componentDidMount() {
-        Manage.showUsers().then(res=> this.setState({users:res.users})).catch(err=>alert(err.message));
+        Manage.showUsers().then(res=> this.setState({users:res.users})).catch(err=>alert(err));
     }
 
     banButtonClick = (_id) =>
@@ -80,7 +80,7 @@ class ManageUser extends React.Component{
 
                 this.setState({users: newUsers});
             }
-        ).catch(err=>alert("禁用/解禁用户失败！"));
+        ).catch(err=>alert(err));
 
     render() {
         const {classes/*, removeButtonClick*/} = this.props;

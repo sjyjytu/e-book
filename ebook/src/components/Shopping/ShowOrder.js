@@ -3,14 +3,11 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
-import {Link} from 'react-router-dom';
 import Toolbar from '@material-ui/core/Toolbar';
 import Divider from '@material-ui/core/Divider';
-import Button from '@material-ui/core/Button';
-import DeleteIcon from "@material-ui/icons/Delete";
 import Header from '../Header';
-import {Book, Order} from "../../agent";
 import {connect} from "react-redux";
+import {Order} from "../../agent";
 
 
 const styles = theme => ({
@@ -61,14 +58,14 @@ const styles = theme => ({
 
 
 
-class Order extends React.Component{
+class ShowOrder extends React.Component{
     constructor(props) {
         super(props);
         this.state = {orders: []};
     }
 
     componentDidMount() {
-        Order.showOrder(this.props._id).then(res=> this.setState({orders:res.orders})).catch(err=>alert(err.message));
+        Order.showOrder(this.props._id).then(res=> this.setState({orders:res.orders})).catch(err=>alert(err));
     }
 
     render() {
@@ -82,14 +79,14 @@ class Order extends React.Component{
                         <React.Fragment key={order.orderId}>
                             <Toolbar>
                                 <Avatar className={classes.avatar} alt="Order" children="订单"/>
-                                <Typography variant="h6">{order.userId}</Typography>
+                                <Typography variant="h6">{order.orderId}</Typography>
                             </Toolbar>
                             <Typography className={classes.title}>{order.createTime}</Typography>
                             <div className={classes.summary}>
                                 {
                                     order.books.map(book=> {
                                         return <Typography>
-                                                {book.name}x{book.num}
+                                                {book.bookname + " * " + book.num}
                                         </Typography>;
                                     })
                                 }
@@ -104,7 +101,7 @@ class Order extends React.Component{
     }
 }
 
-Order.propTypes = {
+ShowOrder.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
@@ -112,14 +109,4 @@ function mapStateToProps(state) {
     return {_id: state.Login._id/*, cart:BookAndNum.books*/};
 }
 
-function mapDispatchToProps(dispatch) {
-    return {
-        /*removeButtonClick: (_id, bookname, ISBN) => Book.removeFromCart(_id, bookname, ISBN).then(dispatch({
-            type: 'REMOVE_FROM_CART',
-            ISBN: ISBN
-        })).catch(() => alert('delete article failed, please try again')),*/
-        //storeCart: res=> dispatch({type:"SHOW_CART",result:res})
-    }
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(Order));
+export default connect(mapStateToProps)(withStyles(styles)(ShowOrder));

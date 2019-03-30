@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import {connect} from "react-redux";
 import {Book} from "../../agent";
-import {IconButton, Radio} from "@material-ui/core";
+import {Radio} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 
 const styles = theme => ({
@@ -81,11 +81,15 @@ class SearchBar extends React.Component{
     }
 
     searchOnClick(key,by) {
-        this.setState({key: ''});
-        if (by === 'ISBN') {
-            Book.getBookByISBN(key).then(res => this.props.searchBooks(res)).catch(err => err.message);
+        if (key === '') {
+            alert('关键字不能为空~');
         } else {
-            Book.getBookByName(key).then(res => this.props.searchBooks(res)).catch(err => err.message);
+            this.setState({key: ''});
+            if (by === 'ISBN') {
+                Book.getBookByISBN(key).then(res => this.props.searchBooks(res)).catch(err => err);
+            } else {
+                Book.getBookByName(key).then(res => this.props.searchBooks(res)).catch(err => err);
+            }
         }
     }
 
@@ -113,7 +117,7 @@ class SearchBar extends React.Component{
                             value="ISBN"
                             name="radio-button"
                             aria-label="ISBN"
-                            checkedIcon={"书名"}
+                            checkedIcon={"ISBN"}
                         />
                         <Radio
                             checked={this.state.by === 'bookname'}
@@ -121,7 +125,7 @@ class SearchBar extends React.Component{
                             value="bookname"
                             name="radio-button"
                             aria-label="bookname"
-                            checkedIcon={"ISBN"}
+                            checkedIcon={"书名"}
                         />
                         <div className={classes.search}>
                             <Button className={classes.searchIcon}
@@ -146,10 +150,16 @@ class SearchBar extends React.Component{
     }
 }
 
+function mapStateToProps(state) {
+    return {
+        //books: state.BookDetail.books,
+    }
+}
+
 function mapDispatchToProps(dispatch) {
     return {
         searchBooks: res => dispatch({type:"SHOW_BOOK",result:res})
     }
 }
 
-export default connect(mapDispatchToProps)(withStyles(styles)(SearchBar));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SearchBar));

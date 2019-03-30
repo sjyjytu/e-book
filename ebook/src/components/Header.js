@@ -73,7 +73,7 @@ class Header extends React.Component{
                         {Login._id !== "" ?
                             (
                                 Login.isManager ?
-                                    <Button color="inherit" className={classes.button} href="#/login">
+                                    <Button color="inherit" className={classes.button} href="#/manage-users">
                                         <AccountCircle className={classes.buttonIcon}/>
                                         管理用户
                                     </Button>

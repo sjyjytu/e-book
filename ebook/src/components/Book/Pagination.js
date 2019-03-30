@@ -29,7 +29,7 @@ class Pagination extends React.Component {
 
                 <div>
                     {
-                        `${(page - 1) * eachPageNum + 1}-${page * eachPageNum} of ${total} Pages`
+                        `${(page - 1) * eachPageNum + 1}-${page * eachPageNum<total?page * eachPageNum:total} of ${allPage} Pages`
                     }
                 </div>
                 <div style={{marginLeft: '200px'}}>

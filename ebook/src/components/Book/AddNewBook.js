@@ -163,7 +163,7 @@ class AddNewBook extends React.Component{
 
         upload.end((err, response) => {
             if (err) {
-                console.error(err);
+                console.log(err);
             }
             if (response.body.secure_url !== '') {
                 this.setState({
@@ -190,7 +190,7 @@ class AddNewBook extends React.Component{
                         <Paper className={this.props.classes.paper}>
                             <form onSubmit={
                                 e => {
-                                    e.preventDefault();
+                                    //e.preventDefault();
                                     this.props.addNewBook(
                                         {
                                             "bookname": this.state.bookname,
@@ -292,7 +292,7 @@ function mapDispatchToProps(dispatch) {
         addNewBook: (book) => {
             Manage.addABook(book)
                 .then(res=>dispatch({type:'ADD_BOOK',book:book}))
-                .catch(()=>alert("add book failed"));
+                .catch((err)=>alert(err));
         },
         onRedirect: () => dispatch({type: 'REDIRECTED'})
     }
