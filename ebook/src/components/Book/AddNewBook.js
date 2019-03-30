@@ -138,7 +138,7 @@ function NumberFormatCustom2(props) {
 class AddNewBook extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {bookname: '', summary: '', uploadImg: null, uploadImgUrl: '', price: '0', author: '', stockNum: '0'};
+        this.state = {bookname: '', summary: '', uploadImgUrl: '', price: '0', author: '', stockNum: '0'};
         this.handleInputChange = field=> e => {
             const state = this.state;
             const newState = Object.assign({}, state, {[field]: e.target.value});
@@ -149,10 +149,6 @@ class AddNewBook extends React.Component{
     }
 
     onImageDrop(files) {
-        this.setState({
-            uploadedFile: files[0]
-        });
-
         this.handleImageUpload(files[0]);
     }
 
@@ -190,7 +186,7 @@ class AddNewBook extends React.Component{
                         <Paper className={this.props.classes.paper}>
                             <form onSubmit={
                                 e => {
-                                    //e.preventDefault();
+                                    e.preventDefault();
                                     this.props.addNewBook(
                                         {
                                             "bookname": this.state.bookname,
@@ -256,7 +252,8 @@ class AddNewBook extends React.Component{
                                         }
                                     }
                                     }/>
-                                    <button className={this.props.classes.imgButton} onClick={() => this.image.click()}>
+                                    <button className={this.props.classes.imgButton} onClick={() => this.image.click()}
+                                    type="button">
                                         {this.state.uploadImgUrl === '' ?
                                             <p>pick cover</p> :
                                             <img className={this.props.classes.img} src={this.state.uploadImgUrl}/>}

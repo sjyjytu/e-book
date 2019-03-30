@@ -4,7 +4,8 @@ const RootUrl = 'http://localhost:8080/ebook2';
 
 function resBody(res) {
     let body = res.body;
-    if (body.error!==undefined)
+    console.log(res);
+    if (undefined!==body.error)
     {
         throw body.error;
     }
@@ -36,7 +37,7 @@ export const Manage = {
         /*{
             "bookname": bookname, "stockNum": stockNum, "summary": summary, "pictureUrl": pictureUrl, "author": author,
             "price": price
-        }*/book).then(resBody),
+        }*/book),
     deleteABook: (_id, bookname, ISBN) => superagent.delete(RootUrl + "/api/manage/delete").set('Content-Type', 'application/json')
         .send({"bookname": bookname, "_id": _id, "ISBN": ISBN}).then(resBody),
     updateABook: (/*bookname, stockNum, summary, pictureUrl, author, price, ISBN*/book) => superagent.post(RootUrl + "/api/manage/update")
