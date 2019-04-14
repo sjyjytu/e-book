@@ -44,12 +44,21 @@ class BooksPage extends React.Component{
         return this.props.storePageBooks(res)}).catch(err=>alert(err));
     }
     componentWillReceiveProps(nextProps, nextContext) {
-        if (this.props.curPage!=nextProps.curPage)
+        if (this.props.curPage!==nextProps.curPage)
             this.bookPageOnChange(nextProps.curPage)
     }
 
     bookPageOnChange(page){
-        Book.showBooks(page,this.props.perPageNum).then(res=>this.props.storePageBooks(res)).catch(err=>alert(err));
+        if (this.props.key==="")
+            Book.showBooks(page,this.props.perPageNum).then(res=>this.props.storePageBooks(res)).catch(err=>alert(err));
+        else
+        {
+            if (this.props.by === 'ISBN') {
+                Book.getBookByISBN(this.props.key,this.props.curPage,this.props.perPageNum).then(res => this.props.searchBooks(res)).catch(err => err);
+            } else {
+                Book.getBookByName(this.props.key,this.props.curPage,this.props.perPageNum).then(res => this.props.searchBooks(res)).catch(err => err);
+            }
+        }
     }
 
     deleteBook(_id, bookname, ISBN) {
@@ -96,6 +105,8 @@ function mapStateToProps(state) {
         update: state.BookDetail.update,
         curPage: state.Page.curPage,
         perPageNum: state.Page.perPageNum,
+        key: state.Search.key,
+        by: state.Search.by,
     }
 }
 

@@ -115,7 +115,7 @@ function Order(state={orders:[]},action) {
     }
 }
 
-function Page(state={curPage:1, perPageNum: 10, total: 0}, action) {
+function Page(state={curPage:1, perPageNum: 2, total: 0}, action) {
     switch (action.type) {
         case "NEXT_PAGE":
             return Object.assign({}, state, {curPage: state.curPage + 1});
@@ -132,6 +132,27 @@ function Page(state={curPage:1, perPageNum: 10, total: 0}, action) {
     }
 }
 
+function Search(state={key:'', by: 'ISBN', count: 0}, action) {
+    switch (action.type) {
+        case "SWITCH_BY":
+            if (state.by === 'ISBN') {
+                return Object.assign({}, state, {by: 'bookname'});
+            } else {
+                return Object.assign({}, state, {by: 'ISBN'});
+            }
+        case "SET_KEY":
+            return Object.assign({}, state, {key: action.key});
+        case "RESET_KEY":
+            return Object.assign({}, state, {key: ''});
+        case "SEARCH":
+            return Object.assign({}, state, {count: state.count+1});
+        case "RESET_COUNT":
+            return Object.assign({}, state, {count: 0});
+        default:
+            return state;
+    }
+}
+
 export default combineReducers(
-    {Login, Redirect, BookDetail, Order, Page}
+    {Login, Redirect, BookDetail, Order, Page, Search}
 );

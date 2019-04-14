@@ -73,28 +73,24 @@ const styles = theme => ({
 class SearchBar extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {
-            key: '',
-            by: 'ISBN'
-        };
         this.handleRadioChange = this.handleRadioChange.bind(this);
     }
 
     searchOnClick(key,by) {
         if (key === '') {
-            alert('关键字不能为空~');
+            alert('关键字不能为空哦~');
         } else {
-            this.setState({key: ''});
+            this.props.searchBtnClick();
             if (by === 'ISBN') {
-                Book.getBookByISBN(key).then(res => this.props.searchBooks(res)).catch(err => err);
+                Book.getBookByISBN(key,this.props.curPage,this.props.perPageNum).then(res => this.props.searchBooks(res)).catch(err => err);
             } else {
-                Book.getBookByName(key).then(res => this.props.searchBooks(res)).catch(err => err);
+                Book.getBookByName(key,this.props.curPage,this.props.perPageNum).then(res => this.props.searchBooks(res)).catch(err => err);
             }
         }
     }
 
     handleRadioChange(e) {
-        this.setState({by: e.target.value});
+        this.props.switchBy();
     }
 
     render() {
@@ -112,7 +108,7 @@ class SearchBar extends React.Component{
                             通过以下方式查找书:
                         </Typography>
                         <Radio
-                            checked={this.state.by === 'ISBN'}
+                            checked={this.props.by === 'ISBN'}
                             onChange={this.handleRadioChange}
                             value="ISBN"
                             name="radio-button"
@@ -120,7 +116,7 @@ class SearchBar extends React.Component{
                             checkedIcon={"ISBN"}
                         />
                         <Radio
-                            checked={this.state.by === 'bookname'}
+                            checked={this.props.by === 'bookname'}
                             onChange={this.handleRadioChange}
                             value="bookname"
                             name="radio-button"
@@ -129,7 +125,7 @@ class SearchBar extends React.Component{
                         />
                         <div className={classes.search}>
                             <Button className={classes.searchIcon}
-                                        onClick={() => this.searchOnClick(this.state.key, this.state.by)}>
+                                        onClick={() => this.searchOnClick(this.props.key, this.props.by)}>
                                 <SearchIcon/>
                                 Go
                             </Button>
@@ -140,8 +136,8 @@ class SearchBar extends React.Component{
                                     root: classes.inputRoot,
                                     input: classes.inputInput,
                                 }}
-                                value={this.state.key}
-                                onChange={e => this.setState({key: e.target.value})}/>
+                                value={this.props.key}
+                                onChange={e => this.props.setKey(e.target.value)}/>
                         </div>
                     </Grid>
                 </Grid>
@@ -152,13 +148,22 @@ class SearchBar extends React.Component{
 
 function mapStateToProps(state) {
     return {
-        //books: state.BookDetail.books,
+        curPage: state.Page.curPage,
+        perPageNum: state.Page.perPageNum,
+        key: state.Search.key,
+        by: state.Search.by,
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        searchBooks: res => dispatch({type:"SHOW_BOOK",result:res})
+        searchBooks: res => {
+            dispatch({type:"SHOW_BOOK",result:res});
+            dispatch({type:"SET_TOTAL",total:res.count});
+        },
+        switchBy: () => dispatch({type:"SWITCH_BY"}),
+        setKey: (key) => dispatch({type:"SET_KEY", key:key}),
+        searchBtnClick: () => {dispatch({type:"RESET_COUNT"});dispatch({type:"SEARCH"});dispatch({type:"RESET_PAGE"});}
     }
 }
 
