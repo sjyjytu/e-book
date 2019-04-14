@@ -26,6 +26,7 @@ const styles = theme => ({
     inputRoot: {
         color: 'inherit',
         width: '100%',
+        display:'inline-block'
 
     },
     searchIcon: {
@@ -67,20 +68,30 @@ const styles = theme => ({
     radio:{
         display: 'inline-block',
         width: '10px',
+    },
+    clearBtn:{
+        marginLeft:-8*theme.spacing.unit,
+        //width: theme.spacing.unit * 2,
+        height: '100%',
+        position: 'absolute',
     }
 });
 
 class SearchBar extends React.Component{
     constructor(props) {
         super(props);
+        this.state = {key:''};
         this.handleRadioChange = this.handleRadioChange.bind(this);
     }
 
-    searchOnClick(key,by) {
-        if (key === '') {
+    async searchOnClick() {
+        const key = this.state.key;
+        const by = this.props.by;
+        this.props.setKey(key);
+        if (key === ''||key===undefined) {
             alert('关键字不能为空哦~');
         } else {
-            this.props.searchBtnClick();
+            await this.props.searchBtnClick();
             if (by === 'ISBN') {
                 Book.getBookByISBN(key,this.props.curPage,this.props.perPageNum).then(res => this.props.searchBooks(res)).catch(err => err);
             } else {
@@ -125,19 +136,23 @@ class SearchBar extends React.Component{
                         />
                         <div className={classes.search}>
                             <Button className={classes.searchIcon}
-                                        onClick={() => this.searchOnClick(this.props.key, this.props.by)}>
+                                        onClick={() => this.searchOnClick()}>
                                 <SearchIcon/>
                                 Go
                             </Button>
-
                             <InputBase
                                 placeholder={"输入关键字查找..."}
                                 classes={{
                                     root: classes.inputRoot,
                                     input: classes.inputInput,
                                 }}
-                                value={this.props.key}
-                                onChange={e => this.props.setKey(e.target.value)}/>
+                                value={this.state.key}
+                                onChange={e => this.setState({key:e.target.value})}/>
+                            <Button className={classes.clearBtn}
+                                    onClick={()=>{this.props.clearAndReset();this.setState({key:''})}}
+                            >
+                                x
+                            </Button>
                         </div>
                     </Grid>
                 </Grid>
@@ -150,7 +165,7 @@ function mapStateToProps(state) {
     return {
         curPage: state.Page.curPage,
         perPageNum: state.Page.perPageNum,
-        key: state.Search.key,
+        keyWord: state.Search.keyWord,
         by: state.Search.by,
     }
 }
@@ -161,9 +176,14 @@ function mapDispatchToProps(dispatch) {
             dispatch({type:"SHOW_BOOK",result:res});
             dispatch({type:"SET_TOTAL",total:res.count});
         },
+        clearAndReset: async () => {
+            await dispatch({type:"RESET_KEY"});
+            dispatch({type:"RESET_PAGE"});
+            dispatch({type:"UPDATE"});
+        },
         switchBy: () => dispatch({type:"SWITCH_BY"}),
-        setKey: (key) => dispatch({type:"SET_KEY", key:key}),
-        searchBtnClick: () => {dispatch({type:"RESET_COUNT"});dispatch({type:"SEARCH"});dispatch({type:"RESET_PAGE"});}
+        setKey: (key) => dispatch({type:"SET_KEY", keyWord:key}),
+        searchBtnClick: () => {dispatch({type:"RESET_PAGE"});}
     }
 }
 

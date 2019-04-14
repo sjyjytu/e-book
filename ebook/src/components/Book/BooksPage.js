@@ -9,7 +9,6 @@ import Catalog from '../Main/Catalog';
 import Pagination from './Pagination';
 import {connect} from "react-redux";
 import {Book, Manage} from "../../agent";
-import {Button} from "@material-ui/core";
 
 const styles = theme => ({
     superRoot:{
@@ -44,19 +43,25 @@ class BooksPage extends React.Component{
         return this.props.storePageBooks(res)}).catch(err=>alert(err));
     }
     componentWillReceiveProps(nextProps, nextContext) {
-        if (this.props.curPage!==nextProps.curPage)
-            this.bookPageOnChange(nextProps.curPage)
+        if (this.props.curPage!==nextProps.curPage || this.props.update!==nextProps.update)
+        {
+            this.bookPageOnChange(nextProps.curPage);
+            console.log(this.props.update!==nextProps.update);
+            console.log(this.props.keyWord);
+        }
     }
 
     bookPageOnChange(page){
-        if (this.props.key==="")
-            Book.showBooks(page,this.props.perPageNum).then(res=>this.props.storePageBooks(res)).catch(err=>alert(err));
+        if (this.props.keyWord==="" || this.props.keyWord===undefined)
+        {
+            Book.showBooks(page,this.props.perPageNum).then(res=>{this.props.setTotal(res.count);return this.props.storePageBooks(res)}).catch(err=>alert(err));
+        }
         else
         {
             if (this.props.by === 'ISBN') {
-                Book.getBookByISBN(this.props.key,this.props.curPage,this.props.perPageNum).then(res => this.props.searchBooks(res)).catch(err => err);
+                Book.getBookByISBN(this.props.keyWord,page,this.props.perPageNum).then(res=>{this.props.setTotal(res.count);return this.props.storePageBooks(res)}).catch(err => err);
             } else {
-                Book.getBookByName(this.props.key,this.props.curPage,this.props.perPageNum).then(res => this.props.searchBooks(res)).catch(err => err);
+                Book.getBookByName(this.props.keyWord,page,this.props.perPageNum).then(res=>{this.props.setTotal(res.count);return this.props.storePageBooks(res)}).catch(err => err);
             }
         }
     }
@@ -105,7 +110,7 @@ function mapStateToProps(state) {
         update: state.BookDetail.update,
         curPage: state.Page.curPage,
         perPageNum: state.Page.perPageNum,
-        key: state.Search.key,
+        keyWord: state.Search.keyWord,
         by: state.Search.by,
     }
 }

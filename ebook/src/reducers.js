@@ -132,7 +132,7 @@ function Page(state={curPage:1, perPageNum: 2, total: 0}, action) {
     }
 }
 
-function Search(state={key:'', by: 'ISBN', count: 0}, action) {
+function Search(state={keyWord:'', by: 'ISBN'}, action) {
     switch (action.type) {
         case "SWITCH_BY":
             if (state.by === 'ISBN') {
@@ -141,13 +141,10 @@ function Search(state={key:'', by: 'ISBN', count: 0}, action) {
                 return Object.assign({}, state, {by: 'ISBN'});
             }
         case "SET_KEY":
-            return Object.assign({}, state, {key: action.key});
+            const newState = Object.assign({}, state, {keyWord: action.keyWord});
+            return newState;
         case "RESET_KEY":
-            return Object.assign({}, state, {key: ''});
-        case "SEARCH":
-            return Object.assign({}, state, {count: state.count+1});
-        case "RESET_COUNT":
-            return Object.assign({}, state, {count: 0});
+            return Object.assign({}, state, {keyWord: ''});
         default:
             return state;
     }

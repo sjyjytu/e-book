@@ -4,7 +4,7 @@ const RootUrl = 'http://localhost:8080/ebook2';
 
 function resBody(res) {
     let body = res.body;
-    console.log(res);
+    //console.log(res);
     if (undefined!==body.error)
     {
         throw body.error;
