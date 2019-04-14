@@ -33,23 +33,23 @@ const styles = theme => ({
 });
 
 class BooksPage extends React.Component{
-    bookNPP = 3;  //book number per page
     constructor(props) {
         super(props);
-        this.state = {curPage:1,total:0,update:this.props.update};
         this.bookPageOnChange = this.bookPageOnChange.bind(this);
         this.deleteBook = this.deleteBook.bind(this);
     }
 
     componentDidMount() {
-        Book.showBooks(this.state.curPage,this.bookNPP).then(res=>{this.setState({total:res.count});
+        Book.showBooks(this.props.curPage,this.props.perPageNum).then(res=>{this.props.setTotal(res.count);
         return this.props.storePageBooks(res)}).catch(err=>alert(err));
+    }
+    componentWillReceiveProps(nextProps, nextContext) {
+        if (this.props.curPage!=nextProps.curPage)
+            this.bookPageOnChange(nextProps.curPage)
     }
 
     bookPageOnChange(page){
-        this.setState({curPage: page});
-        Book.showBooks(page,this.bookNPP).then(res=>{this.setState({totalPage:Math.ceil(res.count/this.bookNPP)||1});
-            return this.props.storePageBooks(res)}).catch(err=>alert(err));
+        Book.showBooks(page,this.props.perPageNum).then(res=>this.props.storePageBooks(res)).catch(err=>alert(err));
     }
 
     deleteBook(_id, bookname, ISBN) {
@@ -84,8 +84,7 @@ class BooksPage extends React.Component{
 
                         </Grid>
                     </Grid>
-                    <Button onClick={()=>this.forceUpdate()}>update</Button>
-                    <Pagination total={this.state.total} eachPageNum = {this.bookNPP} onChange={page => this.bookPageOnChange(page)}/>
+                    <Pagination/>
                 </div>
             );
     }
@@ -95,6 +94,8 @@ function mapStateToProps(state) {
     return {
         books: state.BookDetail.books,
         update: state.BookDetail.update,
+        curPage: state.Page.curPage,
+        perPageNum: state.Page.perPageNum,
     }
 }
 
@@ -102,6 +103,7 @@ function mapDispatchToProps(dispatch) {
     return {
         storePageBooks: res => dispatch({type:"SHOW_BOOK",result:res}),
         deleteBook: ISBN=>dispatch({type:"DELETE_BOOK",ISBN:ISBN}),
+        setTotal: total=>dispatch({type:"SET_TOTAL",total:total})
     }
 }
 

@@ -115,6 +115,23 @@ function Order(state={orders:[]},action) {
     }
 }
 
+function Page(state={curPage:1, perPageNum: 10, total: 0}, action) {
+    switch (action.type) {
+        case "NEXT_PAGE":
+            return Object.assign({}, state, {curPage: state.curPage + 1});
+        case "LAST_PAGE":
+            return Object.assign({}, state, {curPage: state.curPage - 1});
+        case "RESET_PAGE":
+            return Object.assign({}, state, {curPage: 1});
+        case "SET_PPN":
+            return Object.assign({}, state, {perPageNum: action.PPN});
+        case "SET_TOTAL":
+            return Object.assign({}, state, {total: action.total});
+        default:
+            return state;
+    }
+}
+
 export default combineReducers(
-    {Login, Redirect, BookDetail, Order}
+    {Login, Redirect, BookDetail, Order, Page}
 );
