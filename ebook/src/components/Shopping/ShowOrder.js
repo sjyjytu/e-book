@@ -8,6 +8,7 @@ import Divider from '@material-ui/core/Divider';
 import Header from '../Header';
 import {connect} from "react-redux";
 import {Order} from "../../agent";
+import SearchBar from '../Main/SearchBar';
 
 
 const styles = theme => ({
@@ -68,14 +69,24 @@ class ShowOrder extends React.Component{
         Order.showOrder(this.props._id).then(res=> this.setState({orders:res.orders})).catch(err=>alert(err));
     }
 
+    orderFilter(order, keyWord) {
+        if (order.orderId.toString().indexOf(keyWord)!==-1
+            ||order.createTime.indexOf(keyWord)!==-1
+            ||order.totalPrice.toString().indexOf(keyWord)!==-1
+            )
+            return true;
+        return false;
+    }
+
     render() {
         const {classes} = this.props;
         const {orders} = this.state;
         return (
             <div className={classes.superRoot}>
                 <Header/>
+                <SearchBar/>
                 <div className={classes.root}>
-                    {orders.map(order =>
+                    {orders.map(order => this.orderFilter(order, this.props.keyWord)?
                         <React.Fragment key={order.orderId}>
                             <Toolbar>
                                 <Avatar className={classes.avatar} alt="Order" children="订单"/>
@@ -94,6 +105,7 @@ class ShowOrder extends React.Component{
                             <Typography className={classes.price}>{"总价：" + order.totalPrice}</Typography>
                             <Divider className={classes.divider}/>
                         </React.Fragment>
+                        :null
                     )}
                 </div>
             </div>
@@ -106,7 +118,10 @@ ShowOrder.propTypes = {
 };
 
 function mapStateToProps(state) {
-    return {_id: state.Login._id/*, cart:BookAndNum.books*/};
+    return {
+        _id: state.Login._id/*, cart:BookAndNum.books*/,
+        keyWord: state.Search.keyWord,
+    };
 }
 
 export default connect(mapStateToProps)(withStyles(styles)(ShowOrder));

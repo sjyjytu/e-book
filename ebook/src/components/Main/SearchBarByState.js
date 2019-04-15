@@ -9,7 +9,6 @@ import {connect} from "react-redux";
 import {Book} from "../../agent";
 import {Radio} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import { withRouter } from 'react-router-dom';
 
 const styles = theme => ({
     inputInput: {
@@ -21,8 +20,8 @@ const styles = theme => ({
         width: '100%',
 
         [theme.breakpoints.up('md')]: {
-        width: 200,
-    },
+            width: 200,
+        },
     },
     inputRoot: {
         color: 'inherit',
@@ -75,47 +74,23 @@ const styles = theme => ({
         //width: theme.spacing.unit * 2,
         height: '100%',
         position: 'absolute',
-    },
-    hidden:{
-        display:"none"
     }
 });
 
-class SearchBar extends React.Component{
+class SearchBarByState extends React.Component{
     constructor(props) {
         super(props);
         this.state = {key:''};
-        this.handleRadioChange = this.handleRadioChange.bind(this);
     }
 
-    async searchOnClick() {
+    searchOnClick() {
         const key = this.state.key;
-        const by = this.props.by;
+
         this.props.setKey(key);
-        //alert(this.props.location.pathname);
         if (key === ''||key===undefined) {
             alert('关键字不能为空哦~');
         } else {
-            //根据当前页面是订单页还是图书页进行不同处理
-            if (this.props.location.pathname === "/order") {
 
-            } else {
-                await this.props.searchBtnClick();
-                if (by === 'ISBN') {
-                    var regPos = /^\d+(\.\d+)?$/;
-                    if (!regPos.test(key)) {
-                        alert("输入的ISBN格式不正确");
-                    } else {
-                        Book.getBookByISBN(key,this.props.curPage,this.props.perPageNum)
-                            .then(res => this.props.searchBooks(res))
-                            .catch(err => {alert(err);});
-                    }
-                } else {
-                    Book.getBookByName(key,this.props.curPage,this.props.perPageNum)
-                        .then(res => this.props.searchBooks(res))
-                        .catch(err => {alert(err);window.open('https://www.baidu.com/s?wd=' + key, '_blank')});
-                }
-            }
         }
     }
 
@@ -134,33 +109,28 @@ class SearchBar extends React.Component{
                         </Typography>
                     </Grid>
                     <Grid item xs={6}>
-                        <React.Fragment>
-                            <Typography variant="h6" color="inherit"
-                                        className={this.props.location.pathname === "/order"?classes.hidden:null}>
-                                通过以下方式查找书:
-                            </Typography>
-                            <Radio
-                                checked={this.props.by === 'ISBN'}
-                                onChange={this.handleRadioChange}
-                                value="ISBN"
-                                name="radio-button"
-                                aria-label="ISBN"
-                                checkedIcon={"ISBN"}
-                                className={this.props.location.pathname === "/order"?classes.hidden:null}
-                            />
-                            <Radio
-                                checked={this.props.by === 'bookname'}
-                                onChange={this.handleRadioChange}
-                                value="bookname"
-                                name="radio-button"
-                                aria-label="bookname"
-                                checkedIcon={"书名"}
-                                className={this.props.location.pathname === "/order"?classes.hidden:null}
-                            />
-                        </React.Fragment>
+                        <Typography variant="h6" color="inherit">
+                            通过以下方式查找书:
+                        </Typography>
+                        <Radio
+                            checked={this.props.by === 'ISBN'}
+                            onChange={this.handleRadioChange}
+                            value="ISBN"
+                            name="radio-button"
+                            aria-label="ISBN"
+                            checkedIcon={"ISBN"}
+                        />
+                        <Radio
+                            checked={this.props.by === 'bookname'}
+                            onChange={this.handleRadioChange}
+                            value="bookname"
+                            name="radio-button"
+                            aria-label="bookname"
+                            checkedIcon={"书名"}
+                        />
                         <div className={classes.search}>
                             <Button className={classes.searchIcon}
-                                        onClick={() => this.searchOnClick()}>
+                                    onClick={() => this.searchOnClick()}>
                                 <SearchIcon/>
                                 Go
                             </Button>
@@ -187,29 +157,13 @@ class SearchBar extends React.Component{
 
 function mapStateToProps(state) {
     return {
-        curPage: state.Page.curPage,
-        perPageNum: state.Page.perPageNum,
-        keyWord: state.Search.keyWord,
-        by: state.Search.by,
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        searchBooks: res => {
-            dispatch({type:"SHOW_BOOK",result:res});
-            dispatch({type:"SET_TOTAL",total:res.count});
-        },
-        clearAndReset: async () => {
-            await dispatch({type:"RESET_KEY"});
-            dispatch({type:"RESET_PAGE"});
-            dispatch({type:"UPDATE"});
-        },
-        switchBy: () => dispatch({type:"SWITCH_BY"}),
-        setKey: (key) => dispatch({type:"SET_KEY", keyWord:key}),
-        searchBtnClick: () => {dispatch({type:"RESET_PAGE"});}
+
     }
 }
 
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SearchBar)));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SearchBarByState));
