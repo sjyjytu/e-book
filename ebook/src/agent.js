@@ -63,3 +63,9 @@ export const User = {
     signup: (username, password, email) => request.post('/api/user/signup',{"username":username, "password": password,
         "email": email})
 };
+
+export const Statistic = {
+    allData: (username, password) => request.post('/api/user/login',{"username":username, "password": password}),
+    userData: (username, password, email) => request.post('/api/user/signup',{"username":username, "password": password,
+        "email": email})
+};

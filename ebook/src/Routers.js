@@ -10,6 +10,7 @@ import AddNewBook from './components/Book/AddNewBook';
 import UpdateBook from './components/Book/UpdateBook';
 import ManageUser from './components/Manage/ManageUser';
 import ShowOrder from './components/Shopping/ShowOrder';
+import ShowStatistics from './components/Shopping/ShowStatistics'
 
 const BasicRoute = () => {
     return (
@@ -25,6 +26,7 @@ const BasicRoute = () => {
                 <Route exact path="/update/:ISBN" component={UpdateBook}/>
                 <Route exact path="/manage-users" component={ManageUser}/>
                 <Route exact path="/order" component={ShowOrder}/>
+                <Route exact path="/statistics" component={ShowStatistics}/>
             </Switch>
         </HashRouter>
     );
